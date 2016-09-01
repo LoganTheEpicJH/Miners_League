@@ -23,7 +23,7 @@ public class Utilities {
 		PermissionAttachment attachment = p.addAttachment(Main.plugin);
 		World world = Groups.worlds.get(rawWorld.getName());
 		HashSet<String> permissions = world.getGroupsAndPermissions().get(Statistics.getPlayerGroup(p.getName()));
-		if(!permissions.isEmpty()) {
+		if(!permissions.isEmpty()&&world!=null) {
 			for(String perm : permissions) {
 				attachment.setPermission(perm, true);
 			}
