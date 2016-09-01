@@ -9,9 +9,9 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		/*We dont need this, a Plugin gives a Enabel and Disables Logger Info on its own!
-		But there is a simpler way anyway: Bukkit.getServer().getLogger().info(msg);
-		PluginDescriptionFile pdfFile = getDescription();
+		/**We dont need this, a Plugin gives a Enabel and Disable Logger Info on its own!
+		But there is a simpler way anyway: Bukkit.getServer().getLogger().info(msg);**/
+		/*PluginDescriptionFile pdfFile = getDescription();
 		Logger logger = Logger.getLogger("Minecraft");
 		logger.info(pdfFile.getName()+" has been enabled!");*/
 		
