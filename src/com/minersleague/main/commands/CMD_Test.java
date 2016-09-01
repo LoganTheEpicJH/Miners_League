@@ -18,8 +18,8 @@ public class CMD_Test extends MinersLeagueCommand {
 			if(sender.hasPermission("ml.test")) {
 				if(isOnlinePlayer(args[0])) {
 					Player target = getOnlinePlayer(args[0]);
-					target.sendMessage(Utilities.color("&6"+sender.getName()+" >> You&f Hi"));
-					sender.sendMessage(Utilities.color("&6You >> "+target.getName()+" &fHi"));
+					target.sendMessage(Utilities.color("&6"+sender.getName()+" >> You&f Hello"));
+					sender.sendMessage(Utilities.color("&6You >> "+target.getName()+" &fHello"));
 					return true;
 				} else {
 					sender.sendMessage(Utilities.color("&cThe Player &4"+args[0]+" &cis not Online!"));
