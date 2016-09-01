@@ -1,3 +1,7 @@
 main: com.minersleague.Main
 version: 0.0.01
 name: MinersLeague
+commands:
+  test:
+    description: sends a Testmessage to Target
+    usage: /test <Player>
