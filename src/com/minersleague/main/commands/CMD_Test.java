@@ -26,7 +26,7 @@ public class CMD_Test extends MinersLeagueCommand {
 					return true;
 				}
 			} else {
-				sender.sendMessage(Variables.ERROR_PERM_1);
+				sender.sendMessage(Variables.ERROR_PERM_1+": ml.test");
 				return true;
 			}
 		} else {
