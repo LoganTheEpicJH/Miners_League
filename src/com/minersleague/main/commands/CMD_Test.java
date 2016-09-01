@@ -15,7 +15,7 @@ public class CMD_Test extends MinersLeagueCommand {
 	@Override
 	public boolean onCommand(CommandSender sender, String[] args) {
 		if(args.length==1) {
-			if(sender.hasPermission("ml.test")) {
+			if(sender.hasPermission("minersleague.rank.developer")) {
 				if(isOnlinePlayer(args[0])) {
 					Player target = getOnlinePlayer(args[0]);
 					target.sendMessage(Utilities.color("&6"+sender.getName()+" >> You&f Hi"));

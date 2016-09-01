@@ -1,7 +1,11 @@
-main: com.minersleague.Main
+main: com.minersleague.main.Main
 version: 0.0.08
-name: MinersLeague
+name: Miners_League
+
 commands:
   test:
     description: sends a Testmessage to Target
     usage: /test <Player>
+  announce:
+    description: Sends an announcement.
+    usage: /announce <Message>
