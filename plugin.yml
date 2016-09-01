@@ -1,5 +1,5 @@
 main: com.minersleague.Main
-version: 0.0.01
+version: 0.0.08
 name: MinersLeague
 commands:
   test:
