@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 
 import com.minersleague.main.util.Utilities;
 
-public abstract class MinerLeagueCommand implements CommandExecutor {
+public abstract class MinersLeagueCommand implements CommandExecutor {
 
 	private String name;
 
-	public MinerLeagueCommand(String name) {
+	public MinersLeagueCommand(String name) {
 		this.name = name;
 	}
 

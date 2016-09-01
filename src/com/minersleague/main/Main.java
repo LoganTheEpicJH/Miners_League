@@ -3,7 +3,7 @@ package com.minersleague.main;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.minersleague.main.commands.CMD_Test;
-import com.minersleague.main.commands.MinerLeagueCommand;
+import com.minersleague.main.commands.MinersLeagueCommand;
 
 public class Main extends JavaPlugin {
 
@@ -27,7 +27,7 @@ public class Main extends JavaPlugin {
 		logger.info(pdfFile.getName()+" has been disabled!");*/
 	}
 	
-	public void registerCommand(MinerLeagueCommand cmd) {
+	public void registerCommand(MinersLeagueCommand cmd) {
 		getCommand(cmd.getName()).setExecutor(cmd);
 	}
 	
