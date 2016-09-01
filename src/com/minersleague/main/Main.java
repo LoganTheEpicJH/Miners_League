@@ -1,5 +1,7 @@
 package com.minersleague.main;
 
+import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.minersleague.main.commands.CMD_Test;
@@ -28,6 +30,10 @@ public class Main extends JavaPlugin {
 	
 	public void registerCommand(MinersLeagueCommand cmd) {
 		getCommand(cmd.getName()).setExecutor(cmd);
+	}
+	
+	public void registerListener(Listener listener) {
+		Bukkit.getServer().getPluginManager().registerEvents(listener, this);
 	}
 	
 }

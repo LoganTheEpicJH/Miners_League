@@ -15,8 +15,8 @@ public class Variables {
 	
 	/** If we have the Config at some Point we can do:
 	public static String NO_PERMISSION_1 = Utilities.color(cfg.getString("msg.NoPermission") **/
-	public static String NO_PERMISSION_1 = Utilities.color("&cYou dont have the required Permission");
-	public static String WRONG_ARGUMENTS_1 = Utilities.color("&cWrong Arguments");
-	public static String MISSING_ARGUMENTS_1 = Utilities.color("&cCommand is missing Arguments");
+	public static String ERROR_PERM_1 = Utilities.color("&cYou dont have the required Permission");
+	public static String ERROR_WRONG_ARGUMENTS = Utilities.color("&cWrong Arguments");
+	public static String ERROR_LENGHT_ARGUMENTS = Utilities.color("&cCommand is missing or has too many Arguments");
 	
 }

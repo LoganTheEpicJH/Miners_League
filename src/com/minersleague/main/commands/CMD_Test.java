@@ -26,11 +26,11 @@ public class CMD_Test extends MinersLeagueCommand {
 					return true;
 				}
 			} else {
-				sender.sendMessage(Variables.NO_PERMISSION_1);
+				sender.sendMessage(Variables.ERROR_PERM_1);
 				return true;
 			}
 		} else {
-			sender.sendMessage(Variables.MISSING_ARGUMENTS_1);
+			sender.sendMessage(Variables.ERROR_LENGHT_ARGUMENTS);
 			return true;
 		}
 	}
