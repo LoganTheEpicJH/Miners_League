@@ -25,8 +25,9 @@ public class CMD_A extends MinersLeagueCommand {
 				Player tP = Bukkit.getServer().getPlayer(args[0]);
 				String message = ChatColor.translateAlternateColorCodes('&', Arrays.stream(args).collect(Collectors.joining(" "))).replace(args[0], "");
 				
-				tP.sendMessage(Utilities.color(p.getDisplayName() + "&r"));
+				tP.sendMessage(Utilities.color(p.getDisplayName() + "&r" + message));
 				
+				return true;
 			}
 		}
 		

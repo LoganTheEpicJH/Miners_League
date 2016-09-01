@@ -9,3 +9,12 @@ commands:
   announce:
     description: Sends an announcement.
     usage: /announce <Message>
+  a:
+    description: A thing.
+    usage: /a <Player> <Message>
+  addlore:
+    description: Adds a lore.
+    usage: /addlore <lore>
+  rename:
+    description: Renames the item you are holding.
+    usage: /rename <name>

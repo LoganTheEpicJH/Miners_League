@@ -4,7 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.minersleague.main.commands.CMD_Addlore;
 import com.minersleague.main.commands.CMD_Announcement;
+import com.minersleague.main.commands.CMD_Rename;
 import com.minersleague.main.commands.CMD_Test;
 import com.minersleague.main.commands.MinersLeagueCommand;
 import com.minersleague.main.permissions.Groups;
@@ -25,6 +27,8 @@ public class Main extends JavaPlugin {
 		//Commands
 		registerCommand(new CMD_Test());
 		registerCommand(new CMD_Announcement());
+		registerCommand(new CMD_Rename());
+		registerCommand(new CMD_Addlore());
 		
 	}
 
