@@ -14,7 +14,7 @@ public class World {
 		this.permissions = permissions;
 	}
 	
-	public Map<Group, HashSet<String>> getGroupsAndPermissions() {
+	public HashMap<Group, HashSet<String>> getGroupsAndPermissions() {
 		return permissions;
 	}
 	

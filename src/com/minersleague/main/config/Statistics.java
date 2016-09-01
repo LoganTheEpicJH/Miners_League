@@ -10,6 +10,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
+import com.minersleague.main.permissions.Group;
+import com.minersleague.main.permissions.Groups;
+
 public class Statistics {		
 	private Statistics() {}
 	
@@ -52,6 +55,10 @@ public class Statistics {
 		}
 	}
 	
+	public static Group getPlayerGroup(String player) {
+		return Groups.groups.get(getData().getString("Bukkit.Players."+player+".rank"));
+	}
+ 	
 	public static void reloadData() {
 		stats = YamlConfiguration.loadConfiguration(sfile);
 	}
