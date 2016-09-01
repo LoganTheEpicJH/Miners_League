@@ -39,6 +39,7 @@ public class CMD_Announcement extends MinersLeagueCommand {
 			}
 		} else {
 			p.sendMessage(Utilities.color("&c> &7You need rank &f[&cAdmin&f]&7."));
+			return true;
 		}
 
 		return false;
