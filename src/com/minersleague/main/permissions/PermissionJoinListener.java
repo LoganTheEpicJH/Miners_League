@@ -13,7 +13,7 @@ import com.minersleague.main.Main;
 import com.minersleague.main.config.Statistics;
 
 public class PermissionJoinListener implements Listener {
-	
+
 	@EventHandler
 	public void onLogin(PlayerLoginEvent e) {
 		Player p = e.getPlayer();
@@ -21,7 +21,7 @@ public class PermissionJoinListener implements Listener {
 			p.removeAttachment(Groups.attachments.get(p.getUniqueId()));
 		}
 	}
-	
+
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
@@ -29,11 +29,12 @@ public class PermissionJoinListener implements Listener {
 		PermissionAttachment attachment = p.addAttachment(Main.plugin);
 		World world = Groups.worlds.get(rawWorld.getName());
 		HashSet<String> permissions = world.getGroupsAndPermissions().get(Statistics.getPlayerGroup(p.getName()));
-		for(String perm : permissions) {
-			attachment.setPermission(perm, true);
+		if(!permissions.isEmpty()) {
+			for(String perm : permissions) {
+				attachment.setPermission(perm, true);
+			}
+			Groups.attachments.put(p.getUniqueId(), attachment);
 		}
-		Groups.attachments.put(p.getUniqueId(), attachment);
-		
 	}
-	
+
 }

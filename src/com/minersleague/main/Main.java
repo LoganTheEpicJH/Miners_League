@@ -10,6 +10,7 @@ import com.minersleague.main.commands.CMD_Rename;
 import com.minersleague.main.commands.CMD_Test;
 import com.minersleague.main.commands.MinersLeagueCommand;
 import com.minersleague.main.permissions.Groups;
+import com.minersleague.main.permissions.PlayerWorldChangeEvent;
 
 public class Main extends JavaPlugin {
 	
@@ -29,6 +30,9 @@ public class Main extends JavaPlugin {
 		registerCommand(new CMD_Announcement());
 		registerCommand(new CMD_Rename());
 		registerCommand(new CMD_Addlore());
+		
+		//Listeners
+		registerListener(new PlayerWorldChangeEvent());
 		
 	}
 
