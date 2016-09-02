@@ -11,6 +11,7 @@ import com.minersleague.main.commands.CMD_Test;
 import com.minersleague.main.commands.MinersLeagueCommand;
 import com.minersleague.main.permissions.Groups;
 import com.minersleague.main.permissions.PlayerWorldChangeEvent;
+import com.minersleague.main.towerdefense.Towers;
 
 public class Main extends JavaPlugin {
 	
@@ -20,6 +21,7 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		Groups.init();
+		Towers.loadTowners();
 		/**We dont need this, a Plugin gives a Enabel and Disable Logger Info on its own!**/
 		/*PluginDescriptionFile pdfFile = getDescription();
 		Logger logger = Logger.getLogger("Minecraft");

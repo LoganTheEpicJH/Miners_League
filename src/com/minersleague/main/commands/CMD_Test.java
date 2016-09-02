@@ -18,7 +18,7 @@ public class CMD_Test extends MinersLeagueCommand {
 		if(args.length==1) {
 			if(sender.hasPermission("minersleague.rank.developer")) {
 				if(args[0].equalsIgnoreCase("tower")) {
-					Towers.buildTowner(20, Towers.tesla, ((Player)sender).getLocation());
+					Towers.buildTowner(500, Towers.blastiodFurnace, ((Player)sender).getLocation());
 					return true;
 				} else if(isOnlinePlayer(args[0])) {
 					Player target = getOnlinePlayer(args[0]);
