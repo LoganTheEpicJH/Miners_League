@@ -38,27 +38,25 @@ public class CMD_Test extends MinersLeagueCommand {
 			if(args.length==2) {
 				String name = args[1];
 				if(args[0].equalsIgnoreCase("setup")) {
-					Games.games.put(name, new Game());
+					Games.games.put(name, new Game(null, null, null));
 					p.sendMessage(Utilities.color("&cGame "+name+" was created!"));
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("startpoint")) {
+				if(args[0].equalsIgnoreCase("sp")) {
 					StartPoint sp = new StartPoint(p.getLocation());
 					Game game = Games.games.get(name);
-					game.setStart(sp);
-					Games.games.put(name, game);
+					Games.games.put(name, new Game(sp, game.getEnd(), game.getPoints()));
 					p.sendMessage(Utilities.color("&cThe Startpoint from Game "+name+" was set!"));
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("endpoint")) {
+				if(args[0].equalsIgnoreCase("ep")) {
 					EndPoint ep = new EndPoint(p.getLocation());
 					Game game = Games.games.get(name);
-					game.setEnd(ep);
-					Games.games.put(name, game);
+					Games.games.put(name, new Game(game.getStart(), ep, game.getPoints()));
 					p.sendMessage(Utilities.color("&cThe Endpoint from Game "+name+" was set!"));
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("addpoint")) {
+				if(args[0].equalsIgnoreCase("ap")) {
 					Game game = Games.games.get(name);
 					ArrayList<Point> points = null;
 					if(game.getPoints()==null) {
@@ -68,12 +66,18 @@ public class CMD_Test extends MinersLeagueCommand {
 					}
 					Villager villager = (Villager)p.getLocation().getWorld().spawnEntity(((Player)sender).getLocation(), EntityType.VILLAGER);
 					villager.setAI(false);
-					villager.setCustomName("Point "+points.size()+1);
+					villager.setCustomName("Point "+(points.size()+1));
 					villager.setCustomNameVisible(true);
-					Point point = new Point(points.size()+1, p.getLocation(), villager);
+					Point point = null;
+					if(points.isEmpty()) {
+						point = new Point(1, p.getLocation(), villager);
+					} else {
+						point = new Point(points.get(points.size()-1).getID()+1, p.getLocation(), villager);
+					}
+					System.out.println(points.size());
 					points.add(point);
-					Games.games.put(name, game);
-					p.sendMessage(Utilities.color("&cYou added Point "+points.size()+1+" to Game "+name));
+					Games.games.put(name, new Game(game.getStart(), game.getEnd(), points));
+					p.sendMessage(Utilities.color("&cYou added Point "+(points.size()+1)+" to Game "+name));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("start")) {
@@ -84,7 +88,7 @@ public class CMD_Test extends MinersLeagueCommand {
 						p.sendMessage(Utilities.color("&cStartet Game"));
 						return true;
 					}
-					p.sendMessage(Utilities.color("&cError starting game"));
+					p.sendMessage(Utilities.color("&cError starting game: "+game.getStart()+" "+game.getEnd()+" "+game.getPoints()));
 					return true;
 				}
 			}
