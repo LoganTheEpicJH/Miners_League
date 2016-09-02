@@ -40,13 +40,15 @@ public class Towers {
 			blocks.add(new TowerBlock(1, 2, 0, Material.COBBLE_WALL));
 			blocks.add(new TowerBlock(0, 2, -1, Material.COBBLE_WALL));
 			blocks.add(new TowerBlock(-1, 2, 0, Material.COBBLE_WALL));
-			blastiodFurnace = new Tower(blocks);
 			//Stuff that has to be at the End
 			blocks.add(new TowerBlock(0, 1, 0, Material.TNT));
 			blocks.add(new TowerBlock(1, 2, 1, Material.SAND));
 			blocks.add(new TowerBlock(1, 2, -1, Material.SAND));
 			blocks.add(new TowerBlock(-1, 2, -1, Material.SAND));
 			blocks.add(new TowerBlock(-1, 2, 1, Material.SAND));
+			//Stage 1
+			ArrayList<TowerStage> stages = new ArrayList<TowerStage>();
+			blastiodFurnace = new Tower(blocks, true, stages);
 		}
 		
 		//Tesla
@@ -64,7 +66,7 @@ public class Towers {
 			blocks.add(new TowerBlock(0, 1, 0, Material.COBBLE_WALL));
 			blocks.add(new TowerBlock(0, 2, 0, Material.FENCE));
 			blocks.add(new TowerBlock(0, 3, 0, Material.END_ROD, (byte)1));
-			tesla = new Tower(blocks);
+			tesla = new Tower(blocks, false, null);
 		}
 	}
 
