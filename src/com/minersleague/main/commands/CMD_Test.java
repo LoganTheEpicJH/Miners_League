@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.minersleague.main.config.Variables;
+import com.minersleague.main.towerdefense.Towers;
 import com.minersleague.main.util.Utilities;
 
 public class CMD_Test extends MinersLeagueCommand {
@@ -16,7 +17,10 @@ public class CMD_Test extends MinersLeagueCommand {
 	public boolean onCommand(CommandSender sender, String[] args) {
 		if(args.length==1) {
 			if(sender.hasPermission("minersleague.rank.developer")) {
-				if(isOnlinePlayer(args[0])) {
+				if(args[0].equalsIgnoreCase("tower")) {
+					Towers.buildTowner(20, Towers.tesla, ((Player)sender).getLocation());
+					return true;
+				} else if(isOnlinePlayer(args[0])) {
 					Player target = getOnlinePlayer(args[0]);
 					target.sendMessage(Utilities.color("&6"+sender.getName()+" >> You&f Hi"));
 					sender.sendMessage(Utilities.color("&6You >> "+target.getName()+" &fHi"));
@@ -33,6 +37,7 @@ public class CMD_Test extends MinersLeagueCommand {
 			sender.sendMessage(Variables.ERROR_LENGHT_ARGUMENTS);
 			return true;
 		}
+		//return false;
 	}
 
 }
