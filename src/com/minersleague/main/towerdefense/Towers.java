@@ -1,6 +1,7 @@
 package com.minersleague.main.towerdefense;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,9 +12,11 @@ public class Towers {
 	public static Tower blastiodFurnace;
 	public static Tower dmg;
 	public static Tower rmg;
-
+	public static HashMap<String, Tower> towers;
+	
 	@SuppressWarnings("deprecation")
 	public static void loadTowners() {
+		towers = new HashMap<String, Tower>();
 		//Blasiod Furnace
 		{
 			ArrayList<TowerBlock> blocks = new ArrayList<TowerBlock>();
@@ -120,6 +123,11 @@ public class Towers {
 			blocks.add(new TowerBlock(0, 3, 0, Material.COBBLE_WALL));
 			rmg = new Tower(blocks, false, null);
 		}
+		
+		towers.put("blastiod", blastiodFurnace);
+		towers.put("dmg", dmg);
+		towers.put("rmg", rmg);
+		towers.put("lpt", lpt);
 	}
 
 	public static void buildTowner(long delay, Tower tower, Location location) {

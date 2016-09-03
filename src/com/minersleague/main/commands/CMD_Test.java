@@ -13,6 +13,8 @@ import com.minersleague.main.towerdefense.GameStarter;
 import com.minersleague.main.towerdefense.Games;
 import com.minersleague.main.towerdefense.Point;
 import com.minersleague.main.towerdefense.StartPoint;
+import com.minersleague.main.towerdefense.TowerBuilder;
+import com.minersleague.main.towerdefense.Towers;
 import com.minersleague.main.util.Utilities;
 
 public class CMD_Test extends MinersLeagueCommand {
@@ -37,6 +39,11 @@ public class CMD_Test extends MinersLeagueCommand {
 			}
 			if(args.length==2) {
 				String name = args[1];
+				if(args[0].equalsIgnoreCase("build")) {
+					Towers.buildTowner(0, null, null);
+					p.sendMessage(Utilities.color("&cU create Tower "+name+"..."));
+					return true;
+				}
 				if(args[0].equalsIgnoreCase("setup")) {
 					Games.games.put(name, new Game(null, null, null));
 					p.sendMessage(Utilities.color("&cGame "+name+" was created!"));
@@ -77,7 +84,7 @@ public class CMD_Test extends MinersLeagueCommand {
 					System.out.println(points.size());
 					points.add(point);
 					Games.games.put(name, new Game(game.getStart(), game.getEnd(), points));
-					p.sendMessage(Utilities.color("&cYou added Point "+(points.size()+1)+" to Game "+name));
+					p.sendMessage(Utilities.color("&cYou added Point "+points.size()+" to Game "+name));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("start")) {
