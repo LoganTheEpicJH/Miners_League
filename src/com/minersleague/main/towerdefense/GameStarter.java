@@ -71,8 +71,9 @@ public class GameStarter implements Runnable {
 					zombie.setHealth(0.0D);
 				}
 			}
-			for(Zombie zombie : round.getZombies()) {
+			for(int z = 0; z<round.getZombies().size(); z++) {
 				for(int i = 0; i<game.getPoints().size(); i++) {
+					Zombie zombie = round.getZombies().get(z);
 					Point point = game.getPoints().get(i);
 					int zx = zombie.getLocation().getBlockX();
 					int zz = zombie.getLocation().getBlockZ();
@@ -136,7 +137,7 @@ public class GameStarter implements Runnable {
 //				}
 //			}
 			try {
-				Thread.sleep(5);
+				Thread.sleep(10);
 			} catch(InterruptedException e) {
 				e.printStackTrace();
 			}
