@@ -1,6 +1,7 @@
 package com.minersleague.main.commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -33,6 +34,10 @@ public class CMD_Test extends MinersLeagueCommand {
 					GameStarter gs = new GameStarter();
 					gs.endGame();
 					p.sendMessage(Utilities.color("&cGame Endend"));
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("init")) {
+					Games.games = new HashMap<String, Game>();
 					return true;
 				}
 			}

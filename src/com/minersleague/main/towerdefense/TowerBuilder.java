@@ -36,8 +36,8 @@ public class TowerBuilder implements Runnable {
 					worldBlock.setType(block.getMaterial());
 					if(block.direction>0) {
 						worldBlock.getState().setData(new MaterialData(block.getMaterial(), block.direction));
+						worldBlock.getState().update();
 					}
-					worldBlock.getState().update();
 					done = false;
 					at++;
 					try {
