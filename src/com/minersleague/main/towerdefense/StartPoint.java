@@ -10,7 +10,7 @@ public class StartPoint {
 		this.location = location;
 	}
 	
-	public Location getStart() {
+	public Location getLocation() {
 		return location;
 	}
 	

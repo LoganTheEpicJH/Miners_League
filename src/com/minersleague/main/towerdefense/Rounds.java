@@ -9,11 +9,12 @@ public class Rounds {
 
 	private int roundAt;
 	private final int maxRound = 5;
-	private int lifes;
-	private boolean won;
-	private ArrayList<Zombie> zombies = new ArrayList<Zombie>();
+	public int lifes;
+	public boolean won;
+	private ArrayList<Zombie> zombies;
 	
 	public Rounds() {
+		zombies = new ArrayList<Zombie>();
 		won = false;
 		roundAt = 1;
 		lifes = 3;
@@ -21,10 +22,21 @@ public class Rounds {
 	
 	public void nextRound(Game game) {
 		if(roundAt<=maxRound) {
-			int zPerRound = 10*roundAt;
-			for(int i = 1; i<zPerRound; i++) {
-				zombies.add((Zombie)game.getStart().getStart().getWorld().spawnEntity(game.getStart().getStart(), EntityType.ZOMBIE));
-			}
+			//int zPerRound = 1;//10*roundAt;
+			zombies.add((Zombie)game.getStart().getLocation().getWorld().spawnEntity(game.getStart().getLocation(), EntityType.ZOMBIE));
+			zombies.add((Zombie)game.getStart().getLocation().getWorld().spawnEntity(game.getStart().getLocation(), EntityType.ZOMBIE));
+			zombies.add((Zombie)game.getStart().getLocation().getWorld().spawnEntity(game.getStart().getLocation(), EntityType.ZOMBIE));
+			zombies.add((Zombie)game.getStart().getLocation().getWorld().spawnEntity(game.getStart().getLocation(), EntityType.ZOMBIE));
+			zombies.add((Zombie)game.getStart().getLocation().getWorld().spawnEntity(game.getStart().getLocation(), EntityType.ZOMBIE));
+			zombies.add((Zombie)game.getStart().getLocation().getWorld().spawnEntity(game.getStart().getLocation(), EntityType.ZOMBIE));
+//			for(int i = 1; i<zPerRound; i++) {
+//				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+//					@Override
+//					public void run() {
+//						zombies.add((Zombie)game.getStart().getLocation().getWorld().spawnEntity(game.getStart().getLocation(), EntityType.ZOMBIE));
+//					}
+//				}, 10);
+//			}
 		} else {
 			won = true;
 		}

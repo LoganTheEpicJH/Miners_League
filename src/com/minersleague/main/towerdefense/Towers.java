@@ -14,7 +14,6 @@ public class Towers {
 	public static Tower rmg;
 	public static HashMap<String, Tower> towers;
 	
-	@SuppressWarnings("deprecation")
 	public static void loadTowners() {
 		towers = new HashMap<String, Tower>();
 		//Blasiod Furnace

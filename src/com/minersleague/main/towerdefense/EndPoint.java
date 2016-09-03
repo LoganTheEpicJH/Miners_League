@@ -10,7 +10,7 @@ public class EndPoint {
 		this.location = location;
 	}
 	
-	public Location getEnd() {
+	public Location getLocation() {
 		return location;
 	}
 	

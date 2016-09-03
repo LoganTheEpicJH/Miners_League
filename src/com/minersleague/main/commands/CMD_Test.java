@@ -11,7 +11,6 @@ import org.bukkit.entity.Villager;
 import com.minersleague.main.towerdefense.EndPoint;
 import com.minersleague.main.towerdefense.Game;
 import com.minersleague.main.towerdefense.GameStarter;
-import com.minersleague.main.towerdefense.Games;
 import com.minersleague.main.towerdefense.Point;
 import com.minersleague.main.towerdefense.StartPoint;
 import com.minersleague.main.towerdefense.Towers;
@@ -37,7 +36,7 @@ public class CMD_Test extends MinersLeagueCommand {
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("init")) {
-					Games.games = new HashMap<String, Game>();
+					Utilities.games = new HashMap<String, Game>();
 					return true;
 				}
 			}
@@ -49,26 +48,26 @@ public class CMD_Test extends MinersLeagueCommand {
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("setup")) {
-					Games.games.put(name, new Game(null, null, null));
+					Utilities.games.put(name, new Game(null, null, null));
 					p.sendMessage(Utilities.color("&cGame "+name+" was created!"));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("sp")) {
 					StartPoint sp = new StartPoint(p.getLocation());
-					Game game = Games.games.get(name);
-					Games.games.put(name, new Game(sp, game.getEnd(), game.getPoints()));
+					Game game = Utilities.games.get(name);
+					Utilities.games.put(name, new Game(sp, game.getEnd(), game.getPoints()));
 					p.sendMessage(Utilities.color("&cThe Startpoint from Game "+name+" was set!"));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("ep")) {
 					EndPoint ep = new EndPoint(p.getLocation());
-					Game game = Games.games.get(name);
-					Games.games.put(name, new Game(game.getStart(), ep, game.getPoints()));
+					Game game = Utilities.games.get(name);
+					Utilities.games.put(name, new Game(game.getStart(), ep, game.getPoints()));
 					p.sendMessage(Utilities.color("&cThe Endpoint from Game "+name+" was set!"));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("ap")) {
-					Game game = Games.games.get(name);
+					Game game = Utilities.games.get(name);
 					ArrayList<Point> points = null;
 					if(game.getPoints()==null) {
 						points = new ArrayList<Point>();
@@ -87,13 +86,13 @@ public class CMD_Test extends MinersLeagueCommand {
 					}
 					System.out.println(points.size());
 					points.add(point);
-					Games.games.put(name, new Game(game.getStart(), game.getEnd(), points));
+					Utilities.games.put(name, new Game(game.getStart(), game.getEnd(), points));
 					p.sendMessage(Utilities.color("&cYou added Point "+points.size()+" to Game "+name));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("start")) {
-					Game game = Games.games.get(name);
-					if(game.getStart()!=null&&game.getEnd()!=null&&game.getPoints()!=null) {
+					Game game = Utilities.games.get(name);
+					if(game!=null&&game.getStart()!=null&&game.getEnd()!=null&&game.getPoints()!=null) {
 						GameStarter gs = new GameStarter();
 						gs.startGame(game);
 						p.sendMessage(Utilities.color("&cStartet Game"));

@@ -1,10 +1,13 @@
 package com.minersleague.main.util;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -12,9 +15,27 @@ import com.minersleague.main.Main;
 import com.minersleague.main.config.Statistics;
 import com.minersleague.main.permissions.Groups;
 import com.minersleague.main.permissions.World;
+import com.minersleague.main.towerdefense.Game;
 
 public class Utilities {
 
+	public static HashMap<String, Game> games;
+	public static HashMap<Game, Boolean> running;
+	
+	public static void loadGames() {
+		games = new HashMap<String, Game>();
+		running = new HashMap<Game, Boolean>();
+	}
+	
+	public static Entity getEntityByID(org.bukkit.World world, UUID id) {
+		for(Entity entity : world.getEntities()) {
+			if(entity.getUniqueId().equals(id)) {
+				return entity;
+			}
+		}
+		return null;
+	}
+	
 	public static void updatePermissions(Player p) {
 		if(Groups.attachments.containsKey(p.getUniqueId())&&(Groups.attachments.get(p.getUniqueId())!=null)) {
 			p.removeAttachment(Groups.attachments.get(p.getUniqueId()));

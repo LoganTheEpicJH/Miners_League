@@ -11,8 +11,8 @@ import com.minersleague.main.commands.CMD_Test;
 import com.minersleague.main.commands.MinersLeagueCommand;
 import com.minersleague.main.permissions.Groups;
 import com.minersleague.main.permissions.PlayerWorldChangeEvent;
-import com.minersleague.main.towerdefense.Games;
 import com.minersleague.main.towerdefense.Towers;
+import com.minersleague.main.util.Utilities;
 
 public class Main extends JavaPlugin {
 	
@@ -23,11 +23,7 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		Groups.init();
 		Towers.loadTowners();
-		Games.loadGames();
-		/**We dont need this, a Plugin gives a Enabel and Disable Logger Info on its own!**/
-		/*PluginDescriptionFile pdfFile = getDescription();
-		Logger logger = Logger.getLogger("Minecraft");
-		logger.info(pdfFile.getName()+" has been enabled!");*/
+		Utilities.loadGames();
 		
 		//Commands
 		registerCommand(new CMD_Test());
@@ -41,11 +37,7 @@ public class Main extends JavaPlugin {
 	}
 
 	@Override
-	public void onDisable() {
-		/*PluginDescriptionFile pdfFile = getDescription();
-		Logger logger = Logger.getLogger("Minecraft");
-		logger.info(pdfFile.getName()+" has been disabled!");*/
-	}
+	public void onDisable() {}
 	
 	public void registerCommand(MinersLeagueCommand cmd) {
 		getCommand(cmd.getName()).setExecutor(cmd);

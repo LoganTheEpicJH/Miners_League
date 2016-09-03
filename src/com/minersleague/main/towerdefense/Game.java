@@ -10,18 +10,6 @@ public class Game {
 	
 	public Game() {}
 	
-	public Game(StartPoint start) {
-		this.start = start;
-	}
-	
-	public Game(EndPoint end) {
-		this.end = end;
-	}
-	
-	public Game(ArrayList<Point> points) {
-		this.points = points;
-	}
-	
 	public Game(StartPoint start, EndPoint end, ArrayList<Point> points) {
 		this.start = start;
 		this.end = end;
