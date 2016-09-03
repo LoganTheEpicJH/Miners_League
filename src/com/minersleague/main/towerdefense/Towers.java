@@ -7,8 +7,10 @@ import org.bukkit.Material;
 
 public class Towers {
 
-	public static Tower tesla;
+	public static Tower lpt;
 	public static Tower blastiodFurnace;
+	public static Tower dmg;
+	public static Tower rmg;
 
 	@SuppressWarnings("deprecation")
 	public static void loadTowners() {
@@ -51,7 +53,7 @@ public class Towers {
 			blastiodFurnace = new Tower(blocks, true, stages);
 		}
 		
-		//Tesla
+		//LPT
 		{
 			ArrayList<TowerBlock> blocks = new ArrayList<TowerBlock>();
 			blocks.add(new TowerBlock(0, 0, 0, Material.IRON_BLOCK)); //Middle
@@ -66,7 +68,57 @@ public class Towers {
 			blocks.add(new TowerBlock(0, 1, 0, Material.COBBLE_WALL));
 			blocks.add(new TowerBlock(0, 2, 0, Material.FENCE));
 			blocks.add(new TowerBlock(0, 3, 0, Material.END_ROD, (byte)1));
-			tesla = new Tower(blocks, false, null);
+			lpt = new Tower(blocks, false, null);
+		}
+		
+		//DMG
+		{
+			ArrayList<TowerBlock> blocks = new ArrayList<TowerBlock>();
+			blocks.add(new TowerBlock(0, 0, 0, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(1, 0, 0, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(-1, 0, -1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 0, 1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 0, -1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 1, 0, Material.IRON_BLOCK));
+			blocks.add(new TowerBlock(0, 1, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(0, 1, -1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(1, 1, 0, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(0, 3, 0, Material.COBBLE_WALL));
+			dmg = new Tower(blocks, false, null);
+		}
+		
+		//RMG
+		{
+			ArrayList<TowerBlock> blocks = new ArrayList<TowerBlock>();
+			blocks.add(new TowerBlock(0, 0, 0, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(1, 0, 0, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(-1, 0, -1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 0, 1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 0, -1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 1, 0, Material.NETHERRACK));
+			blocks.add(new TowerBlock(0, 1, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(0, 1, -1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(1, 1, 0, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(0, 3, 0, Material.COBBLE_WALL));
+			rmg = new Tower(blocks, false, null);
 		}
 	}
 
