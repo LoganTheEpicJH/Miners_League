@@ -6,12 +6,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.minersleague.main.commands.CMD_Addlore;
 import com.minersleague.main.commands.CMD_Announcement;
+import com.minersleague.main.commands.CMD_Game;
+import com.minersleague.main.commands.CMD_GameTabCompleter;
 import com.minersleague.main.commands.CMD_Rename;
 import com.minersleague.main.commands.CMD_Test;
 import com.minersleague.main.commands.MinersLeagueCommand;
 import com.minersleague.main.permissions.Groups;
 import com.minersleague.main.permissions.PlayerWorldChangeEvent;
-import com.minersleague.main.towerdefense.Towers;
+import com.minersleague.main.towerdefense.tower.Towers;
 import com.minersleague.main.util.Utilities;
 
 public class Main extends JavaPlugin {
@@ -30,6 +32,8 @@ public class Main extends JavaPlugin {
 		registerCommand(new CMD_Announcement());
 		registerCommand(new CMD_Rename());
 		registerCommand(new CMD_Addlore());
+		registerCommand(new CMD_Game());
+		getCommand("game").setTabCompleter(new CMD_GameTabCompleter());
 		
 		//Listeners
 		registerListener(new PlayerWorldChangeEvent());

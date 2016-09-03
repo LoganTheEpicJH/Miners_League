@@ -1,5 +1,6 @@
 package com.minersleague.main.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
@@ -16,15 +17,21 @@ import com.minersleague.main.config.Statistics;
 import com.minersleague.main.permissions.Groups;
 import com.minersleague.main.permissions.World;
 import com.minersleague.main.towerdefense.Game;
+import com.minersleague.main.towerdefense.mechanics.Animator;
+import com.minersleague.main.towerdefense.mechanics.PlayingStage;
 
 public class Utilities {
 
 	public static HashMap<String, Game> games;
 	public static HashMap<Game, Boolean> running;
+	public static HashMap<UUID, PlayingStage> playing;
+	public static ArrayList<Animator> animators;
 	
 	public static void loadGames() {
 		games = new HashMap<String, Game>();
 		running = new HashMap<Game, Boolean>();
+		playing = new HashMap<UUID, PlayingStage>();
+		animators = new ArrayList<Animator>();
 	}
 	
 	public static Entity getEntityByID(org.bukkit.World world, UUID id) {

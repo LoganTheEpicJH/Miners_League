@@ -1,4 +1,4 @@
-package com.minersleague.main.towerdefense;
+package com.minersleague.main.towerdefense.tower;
 
 import org.bukkit.Material;
 

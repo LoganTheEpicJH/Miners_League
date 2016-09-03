@@ -1,8 +1,11 @@
-package com.minersleague.main.towerdefense;
+package com.minersleague.main.towerdefense.tower;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.material.MaterialData;
+
+import com.minersleague.main.towerdefense.mechanics.Animator;
+import com.minersleague.main.util.Utilities;
 
 public class TowerBuilder implements Runnable {
 
@@ -29,7 +32,7 @@ public class TowerBuilder implements Runnable {
 	public void run() {
 		while(!done) {
 			if(!(at+1>tower.getBlocks().size())) {
-				//System.out.println("Done: "+done+" At+1: "+(at+1)+" At: "+at+" Size: "+tower.getBlocks().size());
+				// System.out.println("Done: "+done+" At+1: "+(at+1)+" At: "+at+" Size: "+tower.getBlocks().size());
 				if(tower.getBlocks().get(at)!=null) {
 					TowerBlock block = tower.getBlocks().get(at);
 					Block worldBlock = location.getWorld().getBlockAt(x+block.x, y+block.y, z+block.z);
@@ -47,11 +50,18 @@ public class TowerBuilder implements Runnable {
 					}
 				} else {
 					done = true;
-					//System.out.println("Interruption 1 | A Block is Null TowerBuilder:50");
+					// System.out.println("Interruption 1 | A Block is Null TowerBuilder:50");
 				}
 			} else {
+				if(tower.hasStages()) {
+					if(tower.getTowerStages().size()>1) {
+						Animator animator = new Animator(tower.getTowerStages(), location);
+						new Thread(animator).start();
+						Utilities.animators.add(animator);
+					}
+				}
 				done = true;
-				//System.out.println("Interruption 2 | Done");
+				// System.out.println("Interruption 2 | Done");
 			}
 		}
 	}
