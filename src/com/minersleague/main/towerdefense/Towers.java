@@ -87,14 +87,14 @@ public class Towers {
 			blocks.add(new TowerBlock(0, 0, 1, Material.SMOOTH_BRICK));
 			blocks.add(new TowerBlock(0, 0, -1, Material.SMOOTH_BRICK));
 			blocks.add(new TowerBlock(0, 1, 0, Material.IRON_BLOCK));
-			blocks.add(new TowerBlock(0, 1, 1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(0, 1, -1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(1, 1, 0, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(0, 1, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(0, 1, -1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(1, 1, 0, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 1, 0, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(1, 1, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(1, 1, -1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 1, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 1, 1, Material.PURPUR_SLAB));
 			blocks.add(new TowerBlock(0, 3, 0, Material.COBBLE_WALL));
 			dmg = new Tower(blocks, false, null);
 		}
@@ -115,11 +115,11 @@ public class Towers {
 			blocks.add(new TowerBlock(0, 1, 1, Material.PURPUR_SLAB));
 			blocks.add(new TowerBlock(0, 1, -1, Material.PURPUR_SLAB));
 			blocks.add(new TowerBlock(1, 1, 0, Material.PURPUR_SLAB));
-			blocks.add(new TowerBlock(-1, 0, 0, Material.PURPUR_SLAB));
-			blocks.add(new TowerBlock(1, 0, 1, Material.PURPUR_SLAB));
-			blocks.add(new TowerBlock(1, 0, -1, Material.PURPUR_SLAB));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.PURPUR_SLAB));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 1, 0, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(1, 1, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(1, 1, -1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 1, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 1, 1, Material.PURPUR_SLAB));
 			blocks.add(new TowerBlock(0, 3, 0, Material.COBBLE_WALL));
 			rmg = new Tower(blocks, false, null);
 		}
