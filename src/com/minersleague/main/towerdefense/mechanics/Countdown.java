@@ -31,7 +31,7 @@ public class Countdown implements Runnable {
 				for(UUID up : gs.playing) {
 					Player p = Bukkit.getServer().getPlayer(up);
 					p.setExp(0.0F);
-					p.setLevel(countdown);
+					p.setLevel(0);
 					if(countdown==30) {
 						p.sendTitle(Utilities.color("&c&lCountdown"), Utilities.color("&a&l30 Seconds remaining!"));
 						p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 0);
@@ -50,7 +50,7 @@ public class Countdown implements Runnable {
 						p.resetTitle();
 					}
 				}
-				System.out.println(countdown);
+				//System.out.println(countdown);
 				try {
 					Thread.sleep(1000);
 				} catch(InterruptedException e) {
