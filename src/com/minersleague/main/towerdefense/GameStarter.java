@@ -32,9 +32,16 @@ public class GameStarter implements Runnable {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				@Override
 				public void run() {
-//					for(String zombie : zombies.keySet()) {
-//						zombies.get(zombie).setTarget(game.getPoints().get(0).getVillager());
-//					}
+					LivingEntity lentity = null;
+					for(Entity entity : game.getPoints().get(0).getLocation().getWorld().getNearbyEntities(game.getPoints().get(0).getLocation(), 1d, 2d, 1d)) {
+						if(entity instanceof Villager) {
+							lentity = (LivingEntity)entity;
+							break;
+						}
+					}
+					for(Zombie zombie : round.getZombies()) {
+						zombie.setTarget(lentity);
+					}
 					running = true;
 					Utilities.running.put(game, true);
 					new Thread(gs).start();
@@ -73,7 +80,7 @@ public class GameStarter implements Runnable {
 					int pz = point.getLocation().getBlockZ();
 					if(zx==px&&zz==pz) {
 						LivingEntity lentity = null;
-						if((i+1)<game.getPoints().size()) {
+						if((i+1)<game.getPoints().size()&&game.getPoints().get(i).getID()>=1) {
 							for(Entity entity : game.getPoints().get(i+1).getLocation().getWorld().getNearbyEntities(game.getPoints().get(i+1).getLocation(), 1d, 2d, 1d)) {
 								if(entity instanceof Villager) {
 									lentity = (LivingEntity)entity;
