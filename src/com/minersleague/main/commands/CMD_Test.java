@@ -13,7 +13,6 @@ import com.minersleague.main.towerdefense.GameStarter;
 import com.minersleague.main.towerdefense.Games;
 import com.minersleague.main.towerdefense.Point;
 import com.minersleague.main.towerdefense.StartPoint;
-import com.minersleague.main.towerdefense.TowerBuilder;
 import com.minersleague.main.towerdefense.Towers;
 import com.minersleague.main.util.Utilities;
 
@@ -40,7 +39,7 @@ public class CMD_Test extends MinersLeagueCommand {
 			if(args.length==2) {
 				String name = args[1];
 				if(args[0].equalsIgnoreCase("build")) {
-					Towers.buildTowner(0, null, null);
+					Towers.buildTowner(1000, Towers.towers.get(name), p.getLocation());
 					p.sendMessage(Utilities.color("&cU create Tower "+name+"..."));
 					return true;
 				}
