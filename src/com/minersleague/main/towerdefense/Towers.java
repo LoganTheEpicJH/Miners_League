@@ -21,15 +21,15 @@ public class Towers {
 		{
 			ArrayList<TowerBlock> blocks = new ArrayList<TowerBlock>();
 			//y0
-			blocks.add(new TowerBlock(0, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(0, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(0, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(0, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(0, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.SMOOTH_BRICK));
 			//y1
 			blocks.add(new TowerBlock(0, 1, 1, Material.IRON_BLOCK));
 			blocks.add(new TowerBlock(1, 1, 1, Material.COBBLE_WALL));
@@ -60,14 +60,14 @@ public class Towers {
 		{
 			ArrayList<TowerBlock> blocks = new ArrayList<TowerBlock>();
 			blocks.add(new TowerBlock(0, 0, 0, Material.IRON_BLOCK)); //Middle
-			blocks.add(new TowerBlock(0, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(0, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(0, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.SMOOTH_BRICK));
 			blocks.add(new TowerBlock(0, 1, 0, Material.COBBLE_WALL));
 			blocks.add(new TowerBlock(0, 2, 0, Material.FENCE));
 			blocks.add(new TowerBlock(0, 3, 0, Material.END_ROD, (byte)1));
@@ -77,15 +77,15 @@ public class Towers {
 		//DMG
 		{
 			ArrayList<TowerBlock> blocks = new ArrayList<TowerBlock>();
-			blocks.add(new TowerBlock(0, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(0, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(0, 0, -1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(0, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(0, 0, -1, Material.SMOOTH_BRICK));
 			blocks.add(new TowerBlock(0, 1, 0, Material.IRON_BLOCK));
 			blocks.add(new TowerBlock(0, 1, 1, Material.getMaterial(205)));
 			blocks.add(new TowerBlock(0, 1, -1, Material.getMaterial(205)));
@@ -102,24 +102,24 @@ public class Towers {
 		//RMG
 		{
 			ArrayList<TowerBlock> blocks = new ArrayList<TowerBlock>();
-			blocks.add(new TowerBlock(0, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(-1, 0, -1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(0, 0, 1, Material.getMaterial(98)));
-			blocks.add(new TowerBlock(0, 0, -1, Material.getMaterial(98)));
+			blocks.add(new TowerBlock(0, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(1, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, 0, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(-1, 0, -1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(0, 0, 1, Material.SMOOTH_BRICK));
+			blocks.add(new TowerBlock(0, 0, -1, Material.SMOOTH_BRICK));
 			blocks.add(new TowerBlock(0, 1, 0, Material.NETHERRACK));
-			blocks.add(new TowerBlock(0, 1, 1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(0, 1, -1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(1, 1, 0, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(-1, 0, 0, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(1, 0, 1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(1, 0, -1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(205)));
-			blocks.add(new TowerBlock(-1, 0, 1, Material.getMaterial(205)));
+			blocks.add(new TowerBlock(0, 1, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(0, 1, -1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(1, 1, 0, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 0, 0, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(1, 0, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(1, 0, -1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 0, 1, Material.PURPUR_SLAB));
 			blocks.add(new TowerBlock(0, 3, 0, Material.COBBLE_WALL));
 			rmg = new Tower(blocks, false, null);
 		}
@@ -131,7 +131,7 @@ public class Towers {
 	}
 
 	public static void buildTowner(long delay, Tower tower, Location location) {
-		new Thread(new TowerBuilder(location, tower, delay)).start();;
+		new Thread(new TowerBuilder(location, tower, delay)).start();
 	}
 
 }
