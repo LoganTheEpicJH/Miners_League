@@ -5,7 +5,6 @@ import org.bukkit.block.Block;
 import org.bukkit.material.MaterialData;
 
 import com.minersleague.main.towerdefense.mechanics.Animator;
-import com.minersleague.main.util.Utilities;
 
 public class TowerBuilder implements Runnable {
 
@@ -57,7 +56,7 @@ public class TowerBuilder implements Runnable {
 					if(tower.getTowerStages().size()>1) {
 						Animator animator = new Animator(tower.getTowerStages(), location);
 						new Thread(animator).start();
-						Utilities.animators.add(animator);
+						//Utilities.animators.add(animator);
 					}
 				}
 				done = true;

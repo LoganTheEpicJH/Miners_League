@@ -7,12 +7,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Zombie;
+import org.bukkit.entity.Villager.Profession;
+import org.spigotmc.AsyncCatcher;
 
 import com.minersleague.main.Main;
+import com.minersleague.main.towerdefense.AdvZombie;
 import com.minersleague.main.towerdefense.Game;
 import com.minersleague.main.util.Utilities;
 
@@ -25,12 +29,32 @@ public class GameStarter implements Runnable {
 	private Rounds round;
 	public ArrayList<UUID> playing;
 	private LivingEntity lentity;
-	
+
 	public void initGameStart(Game game) {
-		lentity = null;
-		if(!Utilities.running.containsKey(game.getName())) {
+		AsyncCatcher.enabled = false;
+		boolean foundVillager = false;
+		if(!game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 2D, 2D, 2D).isEmpty()) {
+			for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 2D, 2D, 2D)) {
+				if(entity instanceof Villager) {
+					foundVillager = true;
+					break;
+				}
+			}
+		}
+		if(!foundVillager) {
+			Villager villager = (Villager)game.getPlayground().getWorld().spawnEntity(game.getEnd(), EntityType.VILLAGER);
+			villager.setAdult();
+			villager.setProfession(Profession.FARMER);
+			villager.setSilent(true);
+			villager.setCustomName("End-"+game.getName());
+			villager.setCustomNameVisible(true);
+			villager.setAI(false);
+			foundVillager = true;
+		}
+		if(!Utilities.running.keySet().contains(game.getName())) {
 			Utilities.running.put(game.getName(), false);
 		}
+		lentity = null;
 		if(!Utilities.running.get(game.getName())) {
 			this.game = game;
 			gs = this;
@@ -80,8 +104,8 @@ public class GameStarter implements Runnable {
 						}
 					}
 				}
-				for(Zombie zombie : round.getZombies()) {
-					zombie.setTarget(lentity);
+				for(AdvZombie zombie : round.getZombies()) {
+					zombie.getSpawn().setTarget(lentity);
 				}
 				Utilities.running.put(game.getName(), true);
 			}
@@ -105,10 +129,16 @@ public class GameStarter implements Runnable {
 	@Override
 	public void run() {
 		while(running) {
-			for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 2D, 2D, 2D)) {
+			for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 0, 2, 0)) {
 				if(entity instanceof Zombie) {
-					((Zombie)entity).setHealth(0.0D);
+					Zombie zombie = (Zombie)entity;
+					if(zombie.getLocation().getBlockX()==game.getEnd().getBlockX()&&zombie.getLocation().getBlockZ()==game.getEnd().getBlockZ()) {
+						zombie.setHealth(0.0D);
+					}
 				}
+			}
+			for(AdvZombie zombie : round.getZombies()) {
+				zombie.getSpawn().setTarget(lentity);
 			}
 			try {
 				Thread.sleep(10);

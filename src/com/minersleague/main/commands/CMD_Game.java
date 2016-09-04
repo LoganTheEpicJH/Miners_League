@@ -1,23 +1,24 @@
 package com.minersleague.main.commands;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Villager.Profession;
 
+import com.minersleague.main.Main;
 import com.minersleague.main.towerdefense.Game;
-import com.minersleague.main.towerdefense.mechanics.GameLogic_2;
 import com.minersleague.main.towerdefense.mechanics.GameStarter;
 import com.minersleague.main.towerdefense.mechanics.PlayingStage;
-import com.minersleague.main.towerdefense.tower.Towers;
 import com.minersleague.main.util.Utilities;
 
 public class CMD_Game extends MinersLeagueCommand {
-
-	GameLogic_2 gl2;
 	
 	public CMD_Game() {
 		super("game");
@@ -26,119 +27,136 @@ public class CMD_Game extends MinersLeagueCommand {
 	@Override
 	public boolean onCommand(CommandSender sender, String[] args) {
 		Player p = (Player)sender;
+		String msg = null;
 		if(p.hasPermission("minersleague.rank.developer")) {
-			if(args.length==1) {
-				if(args[0].equalsIgnoreCase("end-2")) {
-					gl2.run = false;
-					p.sendMessage(Utilities.color("&cGame Endend"));
-					return true;
-				}
-			}
+			String name = args[1];
 			if(args.length==2) {
-				String name = args[1];
-				if(args[0].equalsIgnoreCase("end")) {
-					Utilities.gameRunners.get(name).endGame();
-					p.sendMessage(Utilities.color("&cGame Endend"));
-					return true;
-				}
 				if(args[0].equalsIgnoreCase("join")) {
-					Game game = Utilities.games.get(name);
-					p.teleport(game.getLobby());
 					Utilities.playing.put(p.getUniqueId(), PlayingStage.IN_LOBBY);
-					p.setGameMode(GameMode.ADVENTURE);
+					p.teleport(Utilities.games.get(name).getLobby());
+					p.setGameMode(GameMode.CREATIVE);
 					p.sendMessage(Utilities.color("&cYou joined "+name));
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("playground")) {
-					Game game = Utilities.games.get(name);
-					Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), game.getLobby(), p.getLocation()));
-					p.sendMessage(Utilities.color("&cYou added "+name+"'s Game Playground"));
+				if(args[0].equalsIgnoreCase("load")) {
+					File f = new File(Main.plugin.getDataFolder(), "games.yml");
+					FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+					World pointWorld = Bukkit.getServer().getWorld(cfg.getString("game."+name+".points.world"));
+					Location start = new Location(pointWorld, cfg.getDouble("game."+name+".start.x"), cfg.getDouble("game."+name+".start.y"), cfg.getDouble("game."+name+".start.z"));
+					Location end = new Location(pointWorld, cfg.getDouble("game."+name+".end.x"), cfg.getDouble("game."+name+".end.y"), cfg.getDouble("game."+name+".end.z"));
+					Location play = new Location(pointWorld, cfg.getDouble("game."+name+".play.x"), cfg.getDouble("game."+name+".play.y"), cfg.getDouble("game."+name+".play.z"));
+					Location lobby = new Location(Bukkit.getServer().getWorld(cfg.getString("game."+name+".lobby.world")), cfg.getDouble("game."+name+".lobby.x"), cfg.getDouble("game."+name+".lobby.y"), cfg.getDouble("game."+name+".lobby.z"));
+					Utilities.games.put(name, new Game(name, start, end, lobby, play));
+					p.sendMessage(Utilities.color("&cSuccessfully loaded Game "+name+" from File"));
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("setlobby")) {
-					Game game = Utilities.games.get(name);
-					Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), p.getLocation(), game.getPlayground()));
-					p.sendMessage(Utilities.color("&cYou added "+name+"'s Game Lobby"));
-					return true;
-				}
-				if(args[0].equalsIgnoreCase("build")) {
-					Towers.buildTowner(1000, Towers.towers.get(name), p.getLocation());
-					p.sendMessage(Utilities.color("&cU create Tower "+name+"..."));
-					return true;
-				}
-				if(args[0].equalsIgnoreCase("setup")) {
-//					if(args[1].equalsIgnoreCase("gl2")) {
-//						Location start = new Location(p.getLocation().getWorld(), 202.5, 87.1, 380.8);
-//						Location end = new Location(p.getLocation().getWorld(), 199, 84, 329);
-//						gl2 = new GameLogic_2(start, end);
-//						new Thread(gl2).start();
-//						p.sendMessage(Utilities.color("&cYou created Game2 gl2 (PREMADE)"));
-//						return true;
-//					}
-					if(args[1].equalsIgnoreCase("ho")) {
-						org.bukkit.World world = p.getLocation().getWorld();
-						Location start = new Location(world, 202, 87, 381);
-						Location end = new Location(world, 185.5, 84.1, 372.5);
-						Location lobby = new Location(world, 210, 87, 377);
-						Location playground = new Location(world, 195, 93, 378);
-						Game game = new Game(name, start, end, lobby, playground);
-						Utilities.games.put("ho", game);
-						p.sendMessage(Utilities.color("&cYou created Game ho (PREMADE)"));
-						return true;
-					} else if(args[1].equalsIgnoreCase("hi")) {
-						if(p.getLocation().getWorld().getName().equalsIgnoreCase("Minigames")) {
-							org.bukkit.World world = p.getLocation().getWorld();
-							Location start = new Location(world, -192, 17, 57);
-							Location end = new Location(world, -164, 17, 36);
-							Location joiner = new Location(world, -177, 28, 48);
-							Game game = new Game(name, start, end, joiner, joiner);
-							Utilities.games.put("hi", game);
-							p.sendMessage(Utilities.color("&cYou created Game hi (PREMADE)"));
-							return true;
-						} else {
-							p.sendMessage(Utilities.color("&cYou only can setup hi in World: Minigames"));
-							return true;
+				if(args[0].equalsIgnoreCase("save")) {
+					if(Utilities.games.keySet().contains(name)&&Utilities.games.get(name)!=null) {
+						File f = new File(Main.plugin.getDataFolder(), "games.yml");
+						FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+						Game game = Utilities.games.get(name);
+						//Name, Start, End, Lobby, PlayGround
+						cfg.set("game."+name+".name", name);
+						cfg.set("game."+name+".start.x", game.getStart().getX());
+						cfg.set("game."+name+".start.y", game.getStart().getY());
+						cfg.set("game."+name+".start.z", game.getStart().getZ());
+						cfg.set("game."+name+".end.x", game.getEnd().getX());
+						cfg.set("game."+name+".end.y", game.getEnd().getY());
+						cfg.set("game."+name+".end.z", game.getEnd().getZ());
+						cfg.set("game."+name+".play.x", game.getPlayground().getX());
+						cfg.set("game."+name+".play.y", game.getPlayground().getY());
+						cfg.set("game."+name+".play.z", game.getPlayground().getZ());
+						cfg.set("game."+name+".lobby.x", game.getLobby().getX());
+						cfg.set("game."+name+".lobby.y", game.getLobby().getY());
+						cfg.set("game."+name+".lobby.z", game.getLobby().getZ());
+						cfg.set("game."+name+".lobby.world", game.getLobby().getWorld().getName());
+						cfg.set("game."+name+".points.world", game.getStart().getWorld().getName());
+						try {
+							cfg.save(f);
+						} catch(IOException e) {
+							e.printStackTrace();
 						}
-					} else {
-						Utilities.games.put(name, new Game(name, null, null, null, null));
-						p.sendMessage(Utilities.color("&cGame "+name+" was created!"));
+						p.sendMessage(Utilities.color("&cSuccessfully saved Game "+name+" to File"));
 						return true;
+					} else {
+						msg = "No Game-Save";
 					}
 				}
-				if(args[0].equalsIgnoreCase("startpoint")) {
-					Game game = Utilities.games.get(name);
-					Utilities.games.put(name, new Game(name, p.getLocation(), game.getEnd(), game.getLobby(), game.getPlayground()));
-					p.sendMessage(Utilities.color("&cThe Startpoint from Game "+name+" was set!"));
-					return true;
-				}
-				if(args[0].equalsIgnoreCase("endpoint")) {
-					Game game = Utilities.games.get(name);
-					Utilities.games.put(name, new Game(name, game.getStart(), p.getLocation(), game.getLobby(), game.getPlayground()));
-					Villager v = (Villager)p.getLocation().getWorld().spawnEntity(p.getLocation(), EntityType.VILLAGER);
-					v.setProfession(Profession.FARMER);
-					v.setAdult();
-					v.setSilent(true);
-					v.setCustomName("End-"+game.getName());
-					v.setCustomNameVisible(true);
-					v.setAI(false);
-					p.sendMessage(Utilities.color("&cThe Endpoint from Game "+name+" was set!"));
-					return true;
+				if(args[0].equalsIgnoreCase("stop")) {
+					if(Utilities.gameRunners.keySet().contains(name)&&Utilities.gameRunners.get(name)!=null) {
+						GameStarter gs = Utilities.gameRunners.get(name);
+						gs.endGame();
+						Utilities.gameRunners.put(name, null);
+						p.sendMessage(Utilities.color("&cStopped "+name));
+						return true;
+					} else {
+						msg = "No Game Running";
+					}
 				}
 				if(args[0].equalsIgnoreCase("start")) {
-					Game game = Utilities.games.get(name);
-					if(game.noNull()) {
-						GameStarter gs = new GameStarter();
-						gs.initGameStart(game);
-						Utilities.gameRunners.put(name, gs);
-						p.sendMessage(Utilities.color("&cStartet Game"));
-						return true;
-					}
-					p.sendMessage(Utilities.color("&cError starting game"));
+					GameStarter gs = new GameStarter();
+					gs.initGameStart(Utilities.games.get(name));
+					Utilities.gameRunners.put(name, gs);
+					p.sendMessage(Utilities.color("&cSuccessfully started "+name));
 					return true;
+				}
+				if(args[0].equalsIgnoreCase("create")) {
+					if(!Utilities.games.keySet().contains(name)) {
+						Utilities.games.put(name, new Game(name, null, null, null, null));
+						p.sendMessage(Utilities.color("&cCreated Game "+name));
+						return true;
+					} else {
+						msg = "Already Exists";
+					}
+				}
+			}
+			if(args.length==3) {
+				if(args[0].equalsIgnoreCase("set")) {
+					if(args[2].equalsIgnoreCase("play")) {
+						if(Utilities.games.keySet().contains(name)) {
+							Game game = Utilities.games.get(name);
+							Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), game.getLobby(), p.getLocation()));
+							p.sendMessage(Utilities.color("&c"+name+"'s Playground was set"));
+							return true;
+						} else {
+							msg = "Does not Exist";
+						}
+					}
+					if(args[2].equalsIgnoreCase("lobby")) {
+						if(Utilities.games.keySet().contains(name)) {
+							Game game = Utilities.games.get(name);
+							Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), p.getLocation(), game.getPlayground()));
+							p.sendMessage(Utilities.color("&c"+name+"'s Lobby was set"));
+							return true;
+						} else {
+							msg = "Does not Exist";
+						}
+					}
+					if(args[2].equalsIgnoreCase("end")) {
+						if(Utilities.games.keySet().contains(name)) {
+							Game game = Utilities.games.get(name);
+							Utilities.games.put(name, new Game(name, game.getStart(), p.getLocation(), game.getLobby(), game.getPlayground()));
+							p.sendMessage(Utilities.color("&c"+name+"'s Endpoint was set"));
+							return true;
+						} else {
+							msg = "Does not Exist";
+						}
+					}
+					if(args[2].equalsIgnoreCase("start")) {
+						if(Utilities.games.keySet().contains(name)) {
+							Game game = Utilities.games.get(name);
+							Utilities.games.put(name, new Game(name, p.getLocation(), game.getEnd(), game.getLobby(), game.getPlayground()));
+							p.sendMessage(Utilities.color("&c"+name+"'s Startpoint was set"));
+							return true;
+						} else {
+							msg = "Does not Exist";
+						}
+					}
 				}
 			}
 		}
-		return false;
+		p.sendMessage(Utilities.color("&cError: "+msg));
+		return true;
 	}
 
 }
