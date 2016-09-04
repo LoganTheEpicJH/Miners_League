@@ -2,20 +2,29 @@ package com.minersleague.main.towerdefense.tower;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.material.MaterialData;
 
-import com.minersleague.main.towerdefense.mechanics.Animator;
+import com.minersleague.main.towerdefense.BlockMetaData;
+import com.minersleague.main.towerdefense.IDAble;
+import com.minersleague.main.towerdefense.mechanics.Animation;
+import com.minersleague.main.util.Utilities;
 
-public class TowerBuilder implements Runnable {
+public class TowerBuilder extends IDAble implements Runnable {
 
 	private int x, y, z;
-	private Location location;
-	private Tower tower;
+	public Location location;
+	public Tower tower;
 	public boolean done;
 	private int at;
 	private long delay;
+	private TowerBuilder towerBuilder;
+	public String id;
+	private String gameName;
+	public Thread thread;
 
-	public TowerBuilder(Location location, Tower tower, long delay) {
+	public TowerBuilder(String gameName, Location location, Tower tower, long delay) {
+		this.gameName = gameName;
+		id = setID(gameName+"-TowerBuilder");
+		//System.out.println(id);
 		this.location = location;
 		this.tower = tower;
 		this.x = location.getBlockX();
@@ -24,8 +33,18 @@ public class TowerBuilder implements Runnable {
 		at = 0;
 		this.delay = delay;
 		done = false;
+		towerBuilder = this;
+		thread = new Thread(towerBuilder);
+		thread.start();
+		Utilities.idLink.put(id, towerBuilder);
 	}
 
+	public void interrupt() {
+		if(thread.isAlive()) {
+			thread.interrupt();
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
@@ -36,8 +55,13 @@ public class TowerBuilder implements Runnable {
 					TowerBlock block = tower.getBlocks().get(at);
 					Block worldBlock = location.getWorld().getBlockAt(x+block.x, y+block.y, z+block.z);
 					worldBlock.setType(block.getMaterial());
-					if(block.direction>0) {
-						worldBlock.getState().setData(new MaterialData(block.getMaterial(), block.direction));
+					if(block.getMetaData()!=null) {
+						for(BlockMetaData meta : block.getMetaData()) {
+							worldBlock.setData((byte)meta.getMeta(), true);
+							worldBlock.getState().update();
+						}
+					} else if(block.getSpecialData()>0) {
+						worldBlock.setData((byte)block.getSpecialData(), true);
 						worldBlock.getState().update();
 					}
 					done = false;
@@ -53,11 +77,7 @@ public class TowerBuilder implements Runnable {
 				}
 			} else {
 				if(tower.hasStages()) {
-					if(tower.getTowerStages().size()>1) {
-						Animator animator = new Animator(tower.getTowerStages(), location);
-						new Thread(animator).start();
-						//Utilities.animators.add(animator);
-					}
+					new Animation(gameName, towerBuilder);
 				}
 				done = true;
 				// System.out.println("Interruption 2 | Done");

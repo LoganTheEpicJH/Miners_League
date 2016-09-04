@@ -1,5 +1,7 @@
 package com.minersleague.main.towerdefense;
 
+import java.util.ArrayList;
+
 import org.bukkit.Location;
 
 public class Game {
@@ -9,15 +11,28 @@ public class Game {
 	private Location end;
 	private Location lobby;
 	private Location game;
+	private ArrayList<String> joined;
+	private int towerAt;
 	
 	public Game() {}
 	
-	public Game(String name, Location start, Location end, Location lobby, Location game) {
+	public Game(String name, Location start, Location end, Location lobby, Location game, ArrayList<String> playersIn) {
+		joined = playersIn;
 		this.name = name;
 		this.start = start;
 		this.end = end;
 		this.lobby = lobby;
 		this.game = game;
+		towerAt = 0;
+	}
+	
+	public int getNextTowerID() {
+		towerAt++;
+		return towerAt;
+	}
+	
+	public void addPlayer(String player) {
+		joined.add(player);
 	}
 	
 	public boolean noNull() {
@@ -45,6 +60,10 @@ public class Game {
 	
 	public Location getPlayground() {
 		return game;
+	}
+	
+	public ArrayList<String	> getPlayersPlaying() {
+		return joined;
 	}
 	
 }

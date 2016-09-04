@@ -1,7 +1,5 @@
 package com.minersleague.main.towerdefense.mechanics;
 
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -26,11 +24,12 @@ public class Countdown implements Runnable {
 		while(!done) {
 			if(countdown==0) {
 				done = true;
-				startGame();
+				gs.startGame();
 			} else {
 				countdown--;
-				for(UUID up : gs.playing) {
+				for(String up : gs.game.getPlayersPlaying()) {
 					Player p = Bukkit.getServer().getPlayer(up);
+					//System.out.println("Found Player with Name:  "+up.toString());
 					p.setExp(0.0F);
 					p.setLevel(0);
 					if(countdown==30) {
@@ -59,10 +58,6 @@ public class Countdown implements Runnable {
 				}
 			}
 		}
-	}
-	
-	public void startGame() {
-		gs.startGame();
 	}
 	
 }

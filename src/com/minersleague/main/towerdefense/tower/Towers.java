@@ -6,6 +6,8 @@ import java.util.HashMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
+import com.minersleague.main.towerdefense.BlockMetaData;
+
 public class Towers {
 
 	public static Tower lpt;
@@ -53,63 +55,45 @@ public class Towers {
 			//Stage 1
 			ArrayList<TowerStage> stages = new ArrayList<TowerStage>();
 			{
-				ArrayList<TowerBlock> oldBlocks = new ArrayList<TowerBlock>();
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
-				oldBlocks.add(new TowerBlock(-1, 2, -1, Material.NETHERRACK));
 				replacement.add(new TowerBlock(-1, 2, -1, Material.SAND));
-				oldBlocks.add(new TowerBlock(1, 2, 1, Material.NETHERRACK));
 				replacement.add(new TowerBlock(1, 2, 1, Material.SAND));
-				oldBlocks.add(new TowerBlock(-1, 2, 1, Material.NETHERRACK));
 				replacement.add(new TowerBlock(-1, 2, 1, Material.SAND));
-				oldBlocks.add(new TowerBlock(1, 2, -1, Material.NETHERRACK));
 				replacement.add(new TowerBlock(1, 2, -1, Material.SAND));
-				TowerStage stage_0 = new TowerStage(0, false, oldBlocks, replacement, 5000, 1000);
+				TowerStage stage_0 = new TowerStage(0, false, replacement, 5000, 100);
 				stages.add(stage_0);
 			}
 			{
-				ArrayList<TowerBlock> oldBlocks = new ArrayList<TowerBlock>();
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
-				oldBlocks.add(new TowerBlock(-1, 2, -1, Material.SAND));
-				replacement.add(new TowerBlock(-1, 2, -1, Material.STONE));
-				TowerStage stage_1 = new TowerStage(1, false, oldBlocks, replacement, 5000, 1000);
+				replacement.add(new TowerBlock(-1, 2, -1, Material.SAND, new BlockMetaData[]{BlockMetaData.BYTE_1}));
+				TowerStage stage_1 = new TowerStage(1, false, replacement, 5000, 1000);
 				stages.add(stage_1);
 			}
 			{
-				ArrayList<TowerBlock> oldBlocks = new ArrayList<TowerBlock>();
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
-				oldBlocks.add(new TowerBlock(1, 2, -1, Material.SAND));
-				replacement.add(new TowerBlock(1, 2, -1, Material.STONE));
-				TowerStage stage_2 = new TowerStage(2, false, oldBlocks, replacement, 5000, 1000);
+				replacement.add(new TowerBlock(1, 2, -1, Material.SAND, new BlockMetaData[]{BlockMetaData.BYTE_1}));
+				TowerStage stage_2 = new TowerStage(2, false, replacement, 5000, 1000);
 				stages.add(stage_2);
 			}
 			{
-				ArrayList<TowerBlock> oldBlocks = new ArrayList<TowerBlock>();
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
-				oldBlocks.add(new TowerBlock(1, 2, 1, Material.SAND));
-				replacement.add(new TowerBlock(1, 2, 1, Material.STONE));
-				TowerStage stage_3 = new TowerStage(3, false, oldBlocks, replacement, 5000, 1000);
+				replacement.add(new TowerBlock(1, 2, 1, Material.SAND, new BlockMetaData[]{BlockMetaData.BYTE_1}));
+				TowerStage stage_3 = new TowerStage(3, false, replacement, 5000, 1000);
 				stages.add(stage_3);
 			}
 			{
-				ArrayList<TowerBlock> oldBlocks = new ArrayList<TowerBlock>();
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
-				oldBlocks.add(new TowerBlock(-1, 2, 1, Material.SAND));
-				replacement.add(new TowerBlock(-1, 2, 1, Material.STONE));
-				TowerStage stage_4 = new TowerStage(4, false, oldBlocks, replacement, 5000, 1000);
+				replacement.add(new TowerBlock(-1, 2, 1, Material.SAND, new BlockMetaData[]{BlockMetaData.BYTE_1}));
+				TowerStage stage_4 = new TowerStage(4, false, replacement, 5000, 1000);
 				stages.add(stage_4);
 			}
 			{
-				ArrayList<TowerBlock> oldBlocks = new ArrayList<TowerBlock>();
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
-				oldBlocks.add(new TowerBlock(-1, 2, -1, Material.STONE));
 				replacement.add(new TowerBlock(-1, 2, -1, Material.NETHERRACK));
-				oldBlocks.add(new TowerBlock(1, 2, 1, Material.STONE));
 				replacement.add(new TowerBlock(1, 2, 1, Material.NETHERRACK));
-				oldBlocks.add(new TowerBlock(-1, 2, 1, Material.STONE));
 				replacement.add(new TowerBlock(-1, 2, 1, Material.NETHERRACK));
-				oldBlocks.add(new TowerBlock(1, 2, -1, Material.STONE));
 				replacement.add(new TowerBlock(1, 2, -1, Material.NETHERRACK));
-				TowerStage stage_5 = new TowerStage(5, true, oldBlocks, replacement, 5000, 1000);
+				TowerStage stage_5 = new TowerStage(5, true, replacement, 5000, 10);
 				stages.add(stage_5);
 			}
 			blastiodFurnace = new Tower(blocks, true, stages);
@@ -129,7 +113,7 @@ public class Towers {
 			blocks.add(new TowerBlock(-1, 0, 1, Material.SMOOTH_BRICK));
 			blocks.add(new TowerBlock(0, 1, 0, Material.COBBLE_WALL));
 			blocks.add(new TowerBlock(0, 2, 0, Material.FENCE));
-			blocks.add(new TowerBlock(0, 3, 0, Material.END_ROD, (byte)1));
+			blocks.add(new TowerBlock(0, 3, 0, Material.END_ROD, new BlockMetaData[]{BlockMetaData.END_ROD_DOWN}));
 			lpt = new Tower(blocks, false, null);
 		}
 		
@@ -189,8 +173,9 @@ public class Towers {
 		towers.put("lpt", lpt);
 	}
 
-	public static void buildTowner(long delay, Tower tower, Location location) {
-		new Thread(new TowerBuilder(location, tower, delay)).start();
+	public static void buildTowner(String gameName, long delay, Tower tower, Location location) {
+		new TowerBuilder(gameName, location, tower, delay);
+		//Utilities.builders.add(tb);
 	}
 
 }

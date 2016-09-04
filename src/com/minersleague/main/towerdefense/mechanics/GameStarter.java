@@ -1,37 +1,47 @@
 package com.minersleague.main.towerdefense.mechanics;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.bukkit.entity.Zombie;
 import org.bukkit.entity.Villager.Profession;
+import org.bukkit.entity.Zombie;
 import org.spigotmc.AsyncCatcher;
 
 import com.minersleague.main.Main;
 import com.minersleague.main.towerdefense.AdvZombie;
 import com.minersleague.main.towerdefense.Game;
+import com.minersleague.main.towerdefense.IDAble;
 import com.minersleague.main.util.Utilities;
 
-public class GameStarter implements Runnable {
+public class GameStarter extends IDAble implements Runnable {
 
 	public static boolean running;
-	private Game game;
+	public boolean allowed;
+	public Game game;
 	private GameStarter gs;
 	private Countdown c;
 	private Rounds round;
-	public ArrayList<UUID> playing;
 	private LivingEntity lentity;
+	public String id;
+	public Thread thread;
 
 	public void initGameStart(Game game) {
+		id = setID(game.getName()+"-GameStarter");
+		allowed = false;
+		running = true;
+		this.game = game;
 		AsyncCatcher.enabled = false;
+		gs = this;
+		lentity = null;
+		c = new Countdown(gs);
+		thread = new Thread(gs);
+		thread.start();
 		boolean foundVillager = false;
 		if(!game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 2D, 2D, 2D).isEmpty()) {
 			for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 2D, 2D, 2D)) {
@@ -51,47 +61,27 @@ public class GameStarter implements Runnable {
 			villager.setAI(false);
 			foundVillager = true;
 		}
-		if(!Utilities.running.keySet().contains(game.getName())) {
-			Utilities.running.put(game.getName(), false);
-		}
-		lentity = null;
-		if(!Utilities.running.get(game.getName())) {
-			this.game = game;
-			gs = this;
-			c = new Countdown(gs);
-			playing = new ArrayList<UUID>();
-			for(Player p : Bukkit.getServer().getOnlinePlayers()) {
-				if(Utilities.playing.keySet().contains(p.getUniqueId())) {
-					switch(Utilities.playing.get(p.getUniqueId())) {
-						case PLAYING:
-							break;
-						case NOT_PLAYING:
-							break;
-						case IN_LOBBY:
-							p.teleport(game.getPlayground());
-							p.setGameMode(GameMode.CREATIVE);
-							playing.add(p.getUniqueId());
-							break;
-						default:
-							break;
-					}
-				}
+		for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+			if(game.getPlayersPlaying().contains(p.getName())) {
+				p.teleport(game.getPlayground());
+				p.setGameMode(GameMode.CREATIVE);
 			}
-			startCountdown();
 		}
+		
+		startCountdown();
 	}
 
 	public void startCountdown() {
-		running = true;
-		if(!playing.isEmpty()) {
+		if(!game.getPlayersPlaying().isEmpty()) {
 			new Thread(c).start();
+		} else {
+			System.out.println("Countdown List returned Empty");
 		}
 	}
 
 	public void startGame() {
 		round = new Rounds();
 		round.nextRound(game);
-		new Thread(gs).start();
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -110,8 +100,11 @@ public class GameStarter implements Runnable {
 				Utilities.running.put(game.getName(), true);
 			}
 		}, 10);
+		allowed = true;
+		Utilities.idLink.put(id, gs);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void endGame() {
 		running = false;
 		for(Entity zombie : game.getPlayground().getWorld().getEntities()) {
@@ -121,24 +114,29 @@ public class GameStarter implements Runnable {
 				}
 			}
 		}
-		for(UUID up : playing) {
-			Utilities.playing.put(up, PlayingStage.NOT_PLAYING);
+		for(String up : game.getPlayersPlaying()) {
+			Utilities.gameIn.put(up, null);
 		}
+		thread.stop();
 	}
 
 	@Override
 	public void run() {
 		while(running) {
-			for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 0, 2, 0)) {
-				if(entity instanceof Zombie) {
-					Zombie zombie = (Zombie)entity;
-					if(zombie.getLocation().getBlockX()==game.getEnd().getBlockX()&&zombie.getLocation().getBlockZ()==game.getEnd().getBlockZ()) {
-						zombie.setHealth(0.0D);
+			if(allowed) {
+				for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(new Location(game.getEnd().getWorld(), game.getEnd().getX(), game.getEnd().getBlockY()+2, game.getEnd().getZ()), 2d, 2d, 2d)) {
+					if(entity instanceof Zombie) {
+						Zombie zombie = (Zombie)entity;
+						//System.out.println("Found Zombie zx: "+zombie.getLocation().getBlockX()+" zz: "+zombie.getLocation().getBlockY()+" | End x: "+game.getEnd().getBlockX()+" z: "+game.getEnd().getBlockZ());
+						if(zombie.getLocation().getBlockX()==game.getEnd().getBlockX()&&zombie.getLocation().getBlockZ()==game.getEnd().getBlockZ()) {
+							//System.out.println("Found Zombie");
+							zombie.setHealth(0.0D);
+						}
 					}
 				}
-			}
-			for(AdvZombie zombie : round.getZombies()) {
-				zombie.getSpawn().setTarget(lentity);
+				for(AdvZombie zombie : round.getZombies()) {
+					zombie.getSpawn().setTarget(lentity);
+				}
 			}
 			try {
 				Thread.sleep(10);
