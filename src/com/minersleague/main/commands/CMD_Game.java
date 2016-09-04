@@ -85,8 +85,7 @@ public class CMD_Game extends MinersLeagueCommand {
 						Utilities.games.put("ho", game);
 						p.sendMessage(Utilities.color("&cYou created Game ho (PREMADE)"));
 						return true;
-					}
-					if(args[1].equalsIgnoreCase("hi")) {
+					} else if(args[1].equalsIgnoreCase("hi")) {
 						if(p.getLocation().getWorld().getName().equalsIgnoreCase("Minigames")) {
 							org.bukkit.World world = p.getLocation().getWorld();
 							Location start = new Location(world, -192, 17, 57);

@@ -62,12 +62,10 @@ public class Utilities {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static boolean isOnlinePlayer(String player) {
 		return Bukkit.getServer().getPlayer(player).isOnline();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static Player getOnlinePlayer(String player) {
 		return Bukkit.getServer().getPlayer(player);
 	}

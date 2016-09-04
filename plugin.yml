@@ -9,6 +9,7 @@ commands:
   game:
     description: All Commands for the TowerDefense Minigame
     usage: /game <param> <param>
+    aliases: [mlgame, miner_game]
   announce:
     description: Sends an announcement.
     usage: /announce <Message>

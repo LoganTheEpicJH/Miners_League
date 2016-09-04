@@ -2,8 +2,6 @@ package com.minersleague.main.towerdefense.tower;
 
 import java.util.ArrayList;
 
-import org.bukkit.Location;
-
 public class TowerStage {
 
 	public int stageID;

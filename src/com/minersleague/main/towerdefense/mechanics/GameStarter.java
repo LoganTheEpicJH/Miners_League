@@ -13,7 +13,6 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Zombie;
 
 import com.minersleague.main.Main;
-import com.minersleague.main.towerdefense.AdvZombie;
 import com.minersleague.main.towerdefense.Game;
 import com.minersleague.main.util.Utilities;
 
@@ -26,10 +25,8 @@ public class GameStarter implements Runnable {
 	private Rounds round;
 	public ArrayList<UUID> playing;
 	private LivingEntity lentity;
-	private boolean started;
-
+	
 	public void initGameStart(Game game) {
-		started = false;
 		lentity = null;
 		if(!Utilities.running.containsKey(game.getName())) {
 			Utilities.running.put(game.getName(), false);
@@ -62,7 +59,6 @@ public class GameStarter implements Runnable {
 
 	public void startCountdown() {
 		running = true;
-		new Thread(gs).start();
 		if(!playing.isEmpty()) {
 			new Thread(c).start();
 		}
@@ -71,6 +67,7 @@ public class GameStarter implements Runnable {
 	public void startGame() {
 		round = new Rounds();
 		round.nextRound(game);
+		new Thread(gs).start();
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -83,8 +80,8 @@ public class GameStarter implements Runnable {
 						}
 					}
 				}
-				for(AdvZombie zombie : round.getZombies()) {
-					zombie.getSpawn().setTarget(lentity);
+				for(Zombie zombie : round.getZombies()) {
+					zombie.setTarget(lentity);
 				}
 				Utilities.running.put(game.getName(), true);
 			}
@@ -108,29 +105,15 @@ public class GameStarter implements Runnable {
 	@Override
 	public void run() {
 		while(running) {
-			if(!started) {
-				if(c.done) {
-					startGame();
-					started = true;
+			for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 2D, 2D, 2D)) {
+				if(entity instanceof Zombie) {
+					((Zombie)entity).setHealth(0.0D);
 				}
-				try {
-					Thread.sleep(10);
-				} catch(InterruptedException e) {
-					e.printStackTrace();
-				}
-			} else {
-				for(AdvZombie zombie : round.getZombies()) {
-					if(zombie.getSpawn().getLocation().getBlockX()==game.getEnd().getBlockX()&&zombie.getSpawn().getLocation().getBlockZ()==game.getEnd().getBlockZ()) {
-						zombie.getSpawn().setHealth(0.0D);
-					} else {
-						zombie.getSpawn().setTarget(lentity);
-					}
-				}
-				try {
-					Thread.sleep(100);
-				} catch(InterruptedException e) {
-					e.printStackTrace();
-				}
+			}
+			try {
+				Thread.sleep(10);
+			} catch(InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}

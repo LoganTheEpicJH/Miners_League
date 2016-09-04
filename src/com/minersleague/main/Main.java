@@ -3,6 +3,7 @@ package com.minersleague.main;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.spigotmc.AsyncCatcher;
 
 import com.minersleague.main.commands.CMD_Addlore;
 import com.minersleague.main.commands.CMD_Announcement;
@@ -23,6 +24,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
+		AsyncCatcher.enabled = false;
 		Groups.init();
 		Towers.loadTowners();
 		Utilities.loadGames();

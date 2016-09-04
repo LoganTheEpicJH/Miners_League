@@ -26,6 +26,7 @@ public class Countdown implements Runnable {
 		while(!done) {
 			if(countdown==0) {
 				done = true;
+				startGame();
 			} else {
 				countdown--;
 				for(UUID up : gs.playing) {
@@ -59,5 +60,9 @@ public class Countdown implements Runnable {
 			}
 		}
 	}
-
+	
+	public void startGame() {
+		gs.startGame();
+	}
+	
 }
