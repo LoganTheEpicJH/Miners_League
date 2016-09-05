@@ -28,6 +28,19 @@ public class TowerDefenseInventory {
 			is.setItemMeta(im);
 			inv.setItem(10, is);
 		}
+		{
+			ItemStack is = new ItemStack(Material.END_CRYSTAL);
+			ItemMeta im = is.getItemMeta();
+			im.setDisplayName(Utilities.color("&c&lLow Powered Tesla"));
+			List<String> lore = new ArrayList<String>();
+			lore.add(Utilities.color("&cBuild-Time: &65.5 Seconds"));
+			lore.add(Utilities.color("&cType: &6Focus-Damge"));
+			lore.add(Utilities.color("&cRange: &65 Blocks"));
+			lore.add(Utilities.color("&cTowerSpawnID: &6lpt"));
+			im.setLore(lore);
+			is.setItemMeta(im);
+			inv.setItem(12, is);
+		}
 		return inv;
 	}
 	

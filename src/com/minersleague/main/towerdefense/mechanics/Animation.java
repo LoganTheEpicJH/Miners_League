@@ -32,14 +32,13 @@ public class Animation extends IDAble implements Runnable {
 		Utilities.idLink.put(id, animation);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void stop() {
 		animate = false;
 		if(ownThread.isAlive()) {
-			ownThread.stop();
+			ownThread.interrupt();
 		}
 		if(thread.isAlive()&&thread!=null) {
-			thread.stop();
+			thread.interrupt();
 		}
 		if(animator!=null) {
 			animator.done = true;
@@ -62,21 +61,18 @@ public class Animation extends IDAble implements Runnable {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 		while(animate) {
 			if(animator.done) {
-				thread.stop();
+				thread.interrupt();
 				animator = null;
 				thread = null;
 				nextStage();
 			}
 			try {
 				Thread.sleep(1000);
-			} catch(InterruptedException e) {
-				e.printStackTrace();
-			}
+			} catch(InterruptedException e) {}
 		}
 	}
 	

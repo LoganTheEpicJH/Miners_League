@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 import com.minersleague.main.towerdefense.BlockMetaData;
+import com.minersleague.main.towerdefense.tower.function.BlastiodFurnaceFunction;
 
 public class Towers {
 
@@ -60,31 +61,31 @@ public class Towers {
 				replacement.add(new TowerBlock(1, 2, 1, Material.SAND));
 				replacement.add(new TowerBlock(-1, 2, 1, Material.SAND));
 				replacement.add(new TowerBlock(1, 2, -1, Material.SAND));
-				TowerStage stage_0 = new TowerStage(0, false, replacement, 5000, 100);
+				TowerStage stage_0 = new TowerStage(0, false, replacement, 5000, 100, null);
 				stages.add(stage_0);
 			}
 			{
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
 				replacement.add(new TowerBlock(-1, 2, -1, Material.SAND, new BlockMetaData[]{BlockMetaData.BYTE_1}));
-				TowerStage stage_1 = new TowerStage(1, false, replacement, 5000, 1000);
+				TowerStage stage_1 = new TowerStage(1, false, replacement, 5000, 1000, null);
 				stages.add(stage_1);
 			}
 			{
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
 				replacement.add(new TowerBlock(1, 2, -1, Material.SAND, new BlockMetaData[]{BlockMetaData.BYTE_1}));
-				TowerStage stage_2 = new TowerStage(2, false, replacement, 5000, 1000);
+				TowerStage stage_2 = new TowerStage(2, false, replacement, 5000, 1000, null);
 				stages.add(stage_2);
 			}
 			{
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
 				replacement.add(new TowerBlock(1, 2, 1, Material.SAND, new BlockMetaData[]{BlockMetaData.BYTE_1}));
-				TowerStage stage_3 = new TowerStage(3, false, replacement, 5000, 1000);
+				TowerStage stage_3 = new TowerStage(3, false, replacement, 5000, 1000, null);
 				stages.add(stage_3);
 			}
 			{
 				ArrayList<TowerBlock> replacement = new ArrayList<TowerBlock>();
 				replacement.add(new TowerBlock(-1, 2, 1, Material.SAND, new BlockMetaData[]{BlockMetaData.BYTE_1}));
-				TowerStage stage_4 = new TowerStage(4, false, replacement, 5000, 1000);
+				TowerStage stage_4 = new TowerStage(4, false, replacement, 5000, 1000, null);
 				stages.add(stage_4);
 			}
 			{
@@ -93,7 +94,7 @@ public class Towers {
 				replacement.add(new TowerBlock(1, 2, 1, Material.NETHERRACK));
 				replacement.add(new TowerBlock(-1, 2, 1, Material.NETHERRACK));
 				replacement.add(new TowerBlock(1, 2, -1, Material.NETHERRACK));
-				TowerStage stage_5 = new TowerStage(5, true, replacement, 5000, 10);
+				TowerStage stage_5 = new TowerStage(5, true, replacement, 5000, 10, new BlastiodFurnaceFunction(5));
 				stages.add(stage_5);
 			}
 			blastiodFurnace = new Tower(blocks, true, stages);

@@ -68,9 +68,7 @@ public class TowerBuilder extends IDAble implements Runnable {
 					at++;
 					try {
 						Thread.sleep(delay);
-					} catch(InterruptedException e) {
-						System.out.println("TowerBuilder got an Error. Line 44");
-					}
+					} catch(InterruptedException e) {}
 				} else {
 					done = true;
 					// System.out.println("Interruption 1 | A Block is Null TowerBuilder:50");

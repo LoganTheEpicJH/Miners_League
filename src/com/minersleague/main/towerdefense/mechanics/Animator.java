@@ -60,10 +60,12 @@ public class Animator extends IDAble implements Runnable {
 					blockAt++;
 					try {
 						Thread.sleep(stage.delay);
-					} catch(InterruptedException e) {
-						e.printStackTrace();
-					}
+					} catch(InterruptedException e) {}
 				} else {
+					if(stage.finalStage) {
+						stage.tf.towerPos = towerPos;
+						stage.tf.start();
+					}
 					done = true;
 				}
 			}

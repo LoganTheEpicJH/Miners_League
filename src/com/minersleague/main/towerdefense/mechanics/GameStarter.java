@@ -104,7 +104,6 @@ public class GameStarter extends IDAble implements Runnable {
 		Utilities.idLink.put(id, gs);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void endGame() {
 		running = false;
 		for(Entity zombie : game.getPlayground().getWorld().getEntities()) {
@@ -117,7 +116,7 @@ public class GameStarter extends IDAble implements Runnable {
 		for(String up : game.getPlayersPlaying()) {
 			Utilities.gameIn.put(up, null);
 		}
-		thread.stop();
+		thread.interrupt();
 	}
 
 	@Override
@@ -140,9 +139,7 @@ public class GameStarter extends IDAble implements Runnable {
 			}
 			try {
 				Thread.sleep(10);
-			} catch(InterruptedException e) {
-				e.printStackTrace();
-			}
+			} catch(InterruptedException e) {}
 		}
 	}
 

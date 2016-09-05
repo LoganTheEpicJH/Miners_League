@@ -53,9 +53,7 @@ public class Countdown implements Runnable {
 				//System.out.println(countdown);
 				try {
 					Thread.sleep(1000);
-				} catch(InterruptedException e) {
-					e.printStackTrace();
-				}
+				} catch(InterruptedException e) {}
 			}
 		}
 	}
