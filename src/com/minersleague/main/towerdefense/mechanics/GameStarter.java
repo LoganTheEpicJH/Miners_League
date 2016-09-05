@@ -11,12 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.Zombie;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.spigotmc.AsyncCatcher;
 
 import com.minersleague.main.Main;
 import com.minersleague.main.towerdefense.AdvZombie;
 import com.minersleague.main.towerdefense.Game;
 import com.minersleague.main.towerdefense.IDAble;
+import com.minersleague.main.towerdefense.PlayingStage;
 import com.minersleague.main.util.Utilities;
 
 public class GameStarter extends IDAble implements Runnable {
@@ -65,24 +67,23 @@ public class GameStarter extends IDAble implements Runnable {
 			if(game.getPlayersPlaying().contains(p.getName())) {
 				p.teleport(game.getPlayground());
 				p.setGameMode(GameMode.CREATIVE);
+				Utilities.playingStage.put(p.getName(), PlayingStage.PLAYING);
 			}
 		}
-		
+
 		startCountdown();
 	}
 
 	public void startCountdown() {
 		if(!game.getPlayersPlaying().isEmpty()) {
 			new Thread(c).start();
-		} else {
-			System.out.println("Countdown List returned Empty");
 		}
 	}
 
 	public void startGame() {
 		round = new Rounds();
 		round.nextRound(game);
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+		new BukkitRunnable() {
 			@Override
 			public void run() {
 				for(Entity entity : game.getEnd().getWorld().getNearbyEntities(game.getEnd(), 2d, 2d, 2d)) {
@@ -97,15 +98,22 @@ public class GameStarter extends IDAble implements Runnable {
 				for(AdvZombie zombie : round.getZombies()) {
 					zombie.getSpawn().setTarget(lentity);
 				}
-				Utilities.running.put(game.getName(), true);
 			}
-		}, 10);
+		}.runTaskTimer(Main.plugin, 10, 160);
 		allowed = true;
 		Utilities.idLink.put(id, gs);
 	}
 
 	public void endGame() {
 		running = false;
+		for(String s : Utilities.gameIn.keySet()) {
+			if(Utilities.gameIn.get(s)!=null) {
+				if(Utilities.gameIn.get(s).equals(game.getName())) {
+					Utilities.gameIn.put(s, null);
+					Utilities.playingStage.put(s, PlayingStage.NONE);
+				}
+			}
+		}
 		for(Entity zombie : game.getPlayground().getWorld().getEntities()) {
 			if(zombie instanceof Zombie&&zombie.getCustomName()!=null) {
 				if(zombie.getCustomName().equals("Z-"+game.getName())) {
@@ -126,9 +134,9 @@ public class GameStarter extends IDAble implements Runnable {
 				for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(new Location(game.getEnd().getWorld(), game.getEnd().getX(), game.getEnd().getBlockY()+2, game.getEnd().getZ()), 2d, 2d, 2d)) {
 					if(entity instanceof Zombie) {
 						Zombie zombie = (Zombie)entity;
-						//System.out.println("Found Zombie zx: "+zombie.getLocation().getBlockX()+" zz: "+zombie.getLocation().getBlockY()+" | End x: "+game.getEnd().getBlockX()+" z: "+game.getEnd().getBlockZ());
+						// System.out.println("Found Zombie zx: "+zombie.getLocation().getBlockX()+" zz: "+zombie.getLocation().getBlockY()+" | End x: "+game.getEnd().getBlockX()+" z: "+game.getEnd().getBlockZ());
 						if(zombie.getLocation().getBlockX()==game.getEnd().getBlockX()&&zombie.getLocation().getBlockZ()==game.getEnd().getBlockZ()) {
-							//System.out.println("Found Zombie");
+							// System.out.println("Found Zombie");
 							zombie.setHealth(0.0D);
 						}
 					}

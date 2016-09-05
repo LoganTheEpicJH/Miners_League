@@ -15,11 +15,13 @@ import org.bukkit.entity.Player;
 
 import com.minersleague.main.Main;
 import com.minersleague.main.towerdefense.Game;
+import com.minersleague.main.towerdefense.PlayingStage;
 import com.minersleague.main.towerdefense.TowerDefenseInventory;
 import com.minersleague.main.towerdefense.mechanics.Animation;
 import com.minersleague.main.towerdefense.mechanics.Animator;
 import com.minersleague.main.towerdefense.mechanics.GameStarter;
 import com.minersleague.main.towerdefense.tower.TowerBuilder;
+import com.minersleague.main.towerdefense.tower.function.TowerFunction;
 import com.minersleague.main.util.Utilities;
 
 public class CMD_Game extends MinersLeagueCommand {
@@ -34,6 +36,9 @@ public class CMD_Game extends MinersLeagueCommand {
 		String msg = null;
 		if(p.hasPermission("minersleague.rank.developer")) {
 			if(args.length==1) {
+				if(args[0].equalsIgnoreCase("leave")) {
+					
+				}
 				if(args[0].equalsIgnoreCase("build")) {
 					p.openInventory(TowerDefenseInventory.getTowerDefenseInv());
 					return true;
@@ -50,20 +55,54 @@ public class CMD_Game extends MinersLeagueCommand {
 						int active_animators = 0;
 						// int inactive_animators = 0;
 						for(String id : Utilities.idLink.keySet()) {
-							if(id.startsWith(name)) {
-								Object linked = Utilities.idLink.get(id);
-								if(linked instanceof Animator) {
-									active_animators++;
+							if(id.startsWith(args[1])) {
+								Object idLinkObj = Utilities.idLink.get(id);
+								if(id.contains("TowerBuilder")) {
+									TowerBuilder tb = (TowerBuilder)idLinkObj;
+									tb.interrupt();
+									p.sendMessage(Utilities.color("&cYou Stopped "+"&bTowerBuilder: "+id));
 								}
-								if(linked instanceof TowerBuilder) {
-									p.sendMessage(Utilities.color("&bTowerBuilder: "+id));
+								if(id.contains("Animation")) {
+									Animation animation = (Animation)idLinkObj;
+									animation.stop();
+									p.sendMessage(Utilities.color("&cYou Stopped "+"&dAnimation: "+id));
 								}
-								if(linked instanceof Animation) {
-									p.sendMessage(Utilities.color("&dAnimation: "+id));
+								if(id.contains("GameStarter")) {
+									GameStarter gs = (GameStarter)idLinkObj;
+									gs.endGame();
+									p.sendMessage(Utilities.color("&cYou Stopped "+"&aGameMechanic: "+id));
+								}
+								if(id.contains("Animator")) {
+									Animator animator = (Animator)idLinkObj;
+									if(!animator.done) {
+										active_animators++;
+									}
+									animator.stop();
+								}
+								if(id.contains("Thread")) {
+									Thread thread = (Thread)idLinkObj;
+									if(thread.isAlive()) {
+										active_animators++;
+									}
+									thread.interrupt();
+								}
+								if(id.contains("TowerFunction")) {
+									TowerFunction tf = (TowerFunction)idLinkObj;
+									if(tf.repeating) {
+										active_animators++;
+									}
+									tf.repeating = false;
 								}
 							}
 						}
-						p.sendMessage(Utilities.color("&d"+active_animators+" &cAnimators are Stored"));
+						// p.sendMessage(Utilities.color("&cYou stopped &d"+inactive_animators+" &cInactive and&d "+active_animators+" &cActive Animators (Total: "+(active_animators+inactive_animators)+")"));
+						String threadMsg = "&cYou stopped &d"+active_animators+" &cactive Thread";
+						if(active_animators==0||active_animators>1) {
+							threadMsg = threadMsg+"s";
+						}
+						p.sendMessage(Utilities.color(threadMsg));
+						p.sendMessage(Utilities.color("&cStopped all Threads with id-Prefix "+args[2]));
+						return true;
 					}
 					return true;
 				}
@@ -76,6 +115,7 @@ public class CMD_Game extends MinersLeagueCommand {
 					p.setGameMode(GameMode.CREATIVE);
 					p.sendMessage(Utilities.color("&cYou joined "+name));
 					Utilities.gameIn.put(p.getName(), name);
+					Utilities.playingStage.put(p.getName(), PlayingStage.IN_LOBBY);
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("load")) {
@@ -163,43 +203,50 @@ public class CMD_Game extends MinersLeagueCommand {
 						for(String id : Utilities.idLink.keySet()) {
 							if(id.startsWith(args[2])) {
 								Object idLinkObj = Utilities.idLink.get(id);
-								String stopped = "";
-//								if(idLinkObj instanceof GameStarter) {
-//									GameStarter gs = (GameStarter)idLinkObj;
-//									gs.endGame();
-//									stopped = "&aGameStarter: "+id;
-//									p.sendMessage(Utilities.color("&cYou Stopped "+stopped));
-//								}
-								if(idLinkObj instanceof Thread) {
-									Thread thread = (Thread)idLinkObj;
-									thread.interrupt();
-									p.sendMessage(Utilities.color("&cYou stopped a Seperate Thread"));
-								}
-								if(idLinkObj instanceof com.minersleague.main.towerdefense.tower.TowerBuilder) {
+								if(id.contains("TowerBuilder")) {
 									TowerBuilder tb = (TowerBuilder)idLinkObj;
-									tb.done = true;
 									tb.interrupt();
-									stopped = "&bTowerBuilder: "+id;
-									p.sendMessage(Utilities.color("&cYou Stopped "+stopped));
+									p.sendMessage(Utilities.color("&cYou Stopped "+"&bTowerBuilder: "+id));
 								}
-								if(idLinkObj instanceof com.minersleague.main.towerdefense.mechanics.Animation) {
+								if(id.contains("Animation")) {
 									Animation animation = (Animation)idLinkObj;
 									animation.stop();
-									stopped = "&dAnimation: "+id;
-									p.sendMessage(Utilities.color("&cYou Stopped "+stopped));
+									p.sendMessage(Utilities.color("&cYou Stopped "+"&dAnimation: "+id));
 								}
-								if(idLinkObj instanceof com.minersleague.main.towerdefense.mechanics.Animator) {
+								if(id.contains("GameStarter")) {
+									GameStarter gs = (GameStarter)idLinkObj;
+									gs.endGame();
+									p.sendMessage(Utilities.color("&cYou Stopped "+"&aGameMechanic: "+id));
+								}
+								if(id.contains("Animator")) {
 									Animator animator = (Animator)idLinkObj;
 									if(!animator.done) {
 										active_animators++;
-										// inactive_animators++;
 									}
 									animator.stop();
+								}
+								if(id.contains("Thread")) {
+									Thread thread = (Thread)idLinkObj;
+									if(thread.isAlive()) {
+										active_animators++;
+									}
+									thread.interrupt();
+								}
+								if(id.contains("TowerFunction")) {
+									TowerFunction tf = (TowerFunction)idLinkObj;
+									if(tf.repeating) {
+										active_animators++;
+									}
+									tf.repeating = false;
 								}
 							}
 						}
 						// p.sendMessage(Utilities.color("&cYou stopped &d"+inactive_animators+" &cInactive and&d "+active_animators+" &cActive Animators (Total: "+(active_animators+inactive_animators)+")"));
-						p.sendMessage(Utilities.color("&cYou stopped &d"+active_animators+" &cactive Animators"));
+						String threadMsg = "&cYou stopped &d"+active_animators+" &cactive Thread";
+						if(active_animators==0||active_animators>1) {
+							threadMsg = threadMsg+"s";
+						}
+						p.sendMessage(Utilities.color(threadMsg));
 						p.sendMessage(Utilities.color("&cStopped all Threads with id-Prefix "+args[2]));
 						return true;
 					}

@@ -14,7 +14,7 @@ import com.minersleague.main.commands.CMD_Test;
 import com.minersleague.main.commands.MinersLeagueCommand;
 import com.minersleague.main.permissions.Groups;
 import com.minersleague.main.permissions.PlayerWorldChangeEvent;
-import com.minersleague.main.towerdefense.InventoryClickEvent;
+import com.minersleague.main.towerdefense.mechanics.TowerDefenseEventHandler;
 import com.minersleague.main.towerdefense.tower.Towers;
 import com.minersleague.main.util.Utilities;
 
@@ -40,7 +40,7 @@ public class Main extends JavaPlugin {
 		
 		//Listeners
 		registerListener(new PlayerWorldChangeEvent());
-		registerListener(new InventoryClickEvent());
+		registerListener(new TowerDefenseEventHandler());
 		
 	}
 

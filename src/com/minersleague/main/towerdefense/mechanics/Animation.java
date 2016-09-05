@@ -16,7 +16,6 @@ public class Animation extends IDAble implements Runnable {
 	public String id;
 	private String gameName;
 	private Animation animation;
-	private int animatorAt;
 	
 	public Animation(String gameName, TowerBuilder towerBuilder) {
 		this.gameName = gameName;
@@ -24,7 +23,6 @@ public class Animation extends IDAble implements Runnable {
 		this.towerBuilder = towerBuilder;
 		animate = true;
 		done = 0;
-		animatorAt = 0;
 		animation = this;
 		nextStage();
 		ownThread = new Thread(animation);
@@ -47,14 +45,12 @@ public class Animation extends IDAble implements Runnable {
 	
 	public void nextStage() {
 		if(done==towerBuilder.tower.getTowerStages().size()) {
-			
 			done = 0;
 		}
 		TowerStage stage = towerBuilder.tower.getTowerStages().get(done);
 		if(stage!=null) {
-			animatorAt++;
 			//Location loc = new Location(towerBuilder.location.getWorld(), towerBuilder.location.getBlockX(), towerBuilder.location.getBlockY()+2.5, towerBuilder.location.getBlockZ()); //towerBuilder.location;
-			animator = new Animator(gameName, animatorAt, stage, towerBuilder.location);
+			animator = new Animator(gameName, stage, towerBuilder.location);
 			thread = new Thread(animator);
 			thread.start();
 			done++;

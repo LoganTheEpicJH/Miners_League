@@ -16,19 +16,22 @@ import com.minersleague.main.config.Statistics;
 import com.minersleague.main.permissions.Groups;
 import com.minersleague.main.permissions.World;
 import com.minersleague.main.towerdefense.Game;
+import com.minersleague.main.towerdefense.PlayingStage;
 import com.minersleague.main.towerdefense.mechanics.GameStarter;
 
 public class Utilities {
 
 	public static HashMap<String, Game> games;
-	public static HashMap<String, Boolean> running;
+	//public static HashMap<String, Boolean> running;
+	public static HashMap<String, PlayingStage> playingStage;
 	public static HashMap<String, String> gameIn;
 	public static HashMap<String, GameStarter> gameRunners;
 	public static HashMap<String, Object> idLink;
 	
 	public static void loadGames() {
 		games = new HashMap<String, Game>();
-		running = new HashMap<String, Boolean>();
+		playingStage = new HashMap<String, PlayingStage>();
+		//running = new HashMap<String, Boolean>();
 		gameIn = new HashMap<String, String>();
 		gameRunners = new HashMap<String, GameStarter>();
 		idLink = new HashMap<String, Object>();

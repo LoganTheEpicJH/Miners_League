@@ -1,20 +1,47 @@
-package com.minersleague.main.towerdefense;
+package com.minersleague.main.towerdefense.mechanics;
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.minersleague.main.towerdefense.PlayingStage;
+import com.minersleague.main.towerdefense.TowerDefenseInventory;
 import com.minersleague.main.towerdefense.tower.Tower;
 import com.minersleague.main.towerdefense.tower.Towers;
-import com.minersleague.main.towerdefense.tower.function.TeslaFunction;
 import com.minersleague.main.util.Utilities;
 
-public class InventoryClickEvent implements Listener {
+public class TowerDefenseEventHandler implements Listener {
 
 	@EventHandler
-	public void onInvClick(org.bukkit.event.inventory.InventoryClickEvent e) {
+	public void gameZombieDeath(EntityDeathEvent e) {
+		if(e.getEntity() instanceof Zombie) {
+			Zombie zombie = (Zombie)e.getEntity();
+			if(zombie.getCustomName()!=null) {
+				e.setDroppedExp(0);
+				e.getDrops().clear();
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onItemClick(PlayerInteractEvent e) {
+		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)||e.getAction().equals(Action.LEFT_CLICK_AIR)) {
+			if(Utilities.playingStage.get(e.getPlayer().getName())==PlayingStage.PLAYING) {
+				e.setCancelled(true);
+				e.getPlayer().openInventory(TowerDefenseInventory.getTowerDefenseInv());
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onInvClick(InventoryClickEvent e) {
 		if(e.getWhoClicked() instanceof Player) {
 			if(e.getInventory().getName().equals(Utilities.color("&cTowerDefense - Tower Menu"))) {
 				e.setCancelled(true);
@@ -22,7 +49,7 @@ public class InventoryClickEvent implements Listener {
 				ItemStack is = e.getCurrentItem();
 				if(is!=null) {
 					ItemMeta im = is.getItemMeta();
-					if(im.getDisplayName().equals(Utilities.color("&c&lBlastiod Furnace"))||im.getDisplayName().equals(Utilities.color("&c&lLow Powered Tesla"))) {
+					if(im.hasDisplayName()) {
 						if(im.hasLore()) {
 							String searchedLore = null;
 							for(String s : im.getLore()) {
@@ -36,18 +63,11 @@ public class InventoryClickEvent implements Listener {
 							Tower tower = Towers.towers.get(spawnID);
 							String prefix = null;
 							if(Utilities.gameIn.get(p.getName())!=null) {
-								prefix = Utilities.gameIn.get(p.getName())+Utilities.games.get(Utilities.gameIn.get(p.getName())).getNextTowerID();
+								prefix = Utilities.gameIn.get(p.getName());
 							} else {
 								prefix = "ML1";
 							}
-							Towers.buildTowner(prefix, 500, tower, p.getLocation());
-							if(spawnID.equalsIgnoreCase("lpt")) {
-								TeslaFunction tf = new TeslaFunction(5);
-								tf.towerPos = p.getLocation().clone().add(0, 2.5, 0);
-								Thread thread = new Thread(tf);
-								thread.start();
-								Utilities.idLink.put(prefix+"-TeslaRunner", thread);
-							}
+							Towers.buildTowner(prefix, spawnID, 500, tower, p.getLocation());
 							p.sendMessage(Utilities.color("&cTower "+spawnID+" is being created. Thread-Prefix: "+prefix));
 						}
 					}

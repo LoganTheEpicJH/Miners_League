@@ -19,14 +19,15 @@ public class Animator extends IDAble implements Runnable {
 	public String id;
 	private Animator animator;
 
-	public Animator(String gameName, int animatorIndex, TowerStage stage, Location towerPos) {
-		this.id = setID(gameName+"-Animator"+animatorIndex);
+	public Animator(String gameName, TowerStage stage, Location towerPos) {
+		this.id = setID(gameName+"-Animator");
 		this.stage = stage;
 		started = false;
 		done = false;
 		blockAt = 0;
 		this.towerPos = towerPos;
 		animator = this;
+		Utilities.idLink.put(id, null);
 		Utilities.idLink.put(id, animator);
 	}
 
@@ -63,7 +64,8 @@ public class Animator extends IDAble implements Runnable {
 					} catch(InterruptedException e) {}
 				} else {
 					if(stage.finalStage) {
-						stage.tf.towerPos = towerPos;
+						stage.tf.towerPos = towerPos.clone();
+						stage.tf.radius = stage.radius;
 						stage.tf.start();
 					}
 					done = true;

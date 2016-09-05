@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import com.minersleague.main.towerdefense.BlockMetaData;
 import com.minersleague.main.towerdefense.IDAble;
 import com.minersleague.main.towerdefense.mechanics.Animation;
+import com.minersleague.main.towerdefense.tower.function.TowerFunction;
 import com.minersleague.main.util.Utilities;
 
 public class TowerBuilder extends IDAble implements Runnable {
@@ -19,11 +20,13 @@ public class TowerBuilder extends IDAble implements Runnable {
 	private TowerBuilder towerBuilder;
 	public String id;
 	private String gameName;
+	private String towerID;
 	public Thread thread;
 
-	public TowerBuilder(String gameName, Location location, Tower tower, long delay) {
+	public TowerBuilder(String gameName, String towerID, Location location, Tower tower, long delay) {
 		this.gameName = gameName;
-		id = setID(gameName+"-TowerBuilder");
+		this.towerID = towerID;
+		id = setID(gameName+"-TowerBuilder"+towerID+Utilities.games.get(gameName).getNextTowerID());
 		//System.out.println(id);
 		this.location = location;
 		this.tower = tower;
@@ -41,6 +44,7 @@ public class TowerBuilder extends IDAble implements Runnable {
 
 	public void interrupt() {
 		if(thread.isAlive()) {
+			done = true;
 			thread.interrupt();
 		}
 	}
@@ -75,7 +79,22 @@ public class TowerBuilder extends IDAble implements Runnable {
 				}
 			} else {
 				if(tower.hasStages()) {
-					new Animation(gameName, towerBuilder);
+					new Animation(gameName+"-"+towerID+Utilities.games.get(gameName).getNextTowerID(), towerBuilder);
+				} else if(tower.getRepeatingFunction()!=null) {
+					try {
+						Thread.sleep(100);
+					} catch(InterruptedException e) {
+						e.printStackTrace();
+					}
+					TowerFunction tf = tower.getRepeatingFunction();
+					tf.towerPos = location.clone();
+					tf.radius = tower.getRadius();
+					Thread thread = new Thread(tf);
+					tf.repeating = true;
+					thread.start();
+					Utilities.idLink.put(gameName+"-Thread"+thread.getName(), thread);
+					Utilities.idLink.put(gameName+"-TowerFunction"+Utilities.games.get(gameName).getNextTowerID(), tf);
+					System.out.println("Repeating Thread Started");
 				}
 				done = true;
 				// System.out.println("Interruption 2 | Done");
