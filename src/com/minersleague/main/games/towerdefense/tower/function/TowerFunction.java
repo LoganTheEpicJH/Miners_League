@@ -1,4 +1,4 @@
-package com.minersleague.main.towerdefense.tower.function;
+package com.minersleague.main.games.towerdefense.tower.function;
 
 import org.bukkit.Location;
 

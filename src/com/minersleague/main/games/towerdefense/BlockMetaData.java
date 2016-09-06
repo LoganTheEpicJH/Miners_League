@@ -1,4 +1,4 @@
-package com.minersleague.main.towerdefense;
+package com.minersleague.main.games.towerdefense;
 
 public enum BlockMetaData {
 	

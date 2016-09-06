@@ -1,4 +1,4 @@
-package com.minersleague.main.towerdefense;
+package com.minersleague.main.games.towerdefense;
 
 import java.util.ArrayList;
 import java.util.List;

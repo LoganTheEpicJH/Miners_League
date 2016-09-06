@@ -1,8 +1,8 @@
-package com.minersleague.main.towerdefense.tower;
+package com.minersleague.main.games.towerdefense.tower;
 
 import java.util.ArrayList;
 
-import com.minersleague.main.towerdefense.tower.function.TowerFunction;
+import com.minersleague.main.games.towerdefense.tower.function.TowerFunction;
 
 public class TowerStage {
 

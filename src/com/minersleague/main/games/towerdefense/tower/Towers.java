@@ -1,4 +1,4 @@
-package com.minersleague.main.towerdefense.tower;
+package com.minersleague.main.games.towerdefense.tower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,9 +6,9 @@ import java.util.HashMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-import com.minersleague.main.towerdefense.BlockMetaData;
-import com.minersleague.main.towerdefense.tower.function.BlastiodFurnaceFunction;
-import com.minersleague.main.towerdefense.tower.function.TeslaFunction;
+import com.minersleague.main.games.towerdefense.BlockMetaData;
+import com.minersleague.main.games.towerdefense.tower.function.BlastiodFurnaceFunction;
+import com.minersleague.main.games.towerdefense.tower.function.TeslaFunction;
 
 public class Towers {
 

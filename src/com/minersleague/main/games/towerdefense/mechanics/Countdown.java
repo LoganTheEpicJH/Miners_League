@@ -1,4 +1,4 @@
-package com.minersleague.main.towerdefense.mechanics;
+package com.minersleague.main.games.towerdefense.mechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -12,10 +12,10 @@ public class Countdown implements Runnable {
 	private GameStarter gs;
 	private int countdown;
 
-	public Countdown(GameStarter gs) {
+	public Countdown(GameStarter gs, int countdown) {
 		done = false;
 		this.gs = gs;
-		countdown = 31;
+		this.countdown = countdown;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -29,7 +29,6 @@ public class Countdown implements Runnable {
 				countdown--;
 				for(String up : gs.game.getPlayersPlaying()) {
 					Player p = Bukkit.getServer().getPlayer(up);
-					//System.out.println("Found Player with Name:  "+up.toString());
 					p.setExp(0.0F);
 					p.setLevel(0);
 					if(countdown==30) {
@@ -50,7 +49,6 @@ public class Countdown implements Runnable {
 						p.resetTitle();
 					}
 				}
-				//System.out.println(countdown);
 				try {
 					Thread.sleep(1000);
 				} catch(InterruptedException e) {}

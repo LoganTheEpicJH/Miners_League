@@ -1,12 +1,12 @@
-package com.minersleague.main.towerdefense.mechanics;
+package com.minersleague.main.games.towerdefense.mechanics;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import com.minersleague.main.towerdefense.BlockMetaData;
-import com.minersleague.main.towerdefense.IDAble;
-import com.minersleague.main.towerdefense.tower.TowerBlock;
-import com.minersleague.main.towerdefense.tower.TowerStage;
+import com.minersleague.main.games.towerdefense.BlockMetaData;
+import com.minersleague.main.games.towerdefense.IDAble;
+import com.minersleague.main.games.towerdefense.tower.TowerBlock;
+import com.minersleague.main.games.towerdefense.tower.TowerStage;
 import com.minersleague.main.util.Utilities;
 
 public class Animator extends IDAble implements Runnable {

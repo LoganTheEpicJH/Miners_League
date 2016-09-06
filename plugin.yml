@@ -6,10 +6,10 @@ commands:
   test:
     description: sends a Testmessage to Target
     usage: /test <Player>
-  game:
+  towerdefense:
     description: All Commands for the TowerDefense Minigame
     usage: /game <param> <param>
-    aliases: [mlgame, miner_game]
+    aliases: [mltowerdefense, miner_towerdefense, mltd, td]
   announce:
     description: Sends an announcement.
     usage: /announce <Message>

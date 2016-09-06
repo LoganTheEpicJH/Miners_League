@@ -1,8 +1,8 @@
-package com.minersleague.main.towerdefense.tower;
+package com.minersleague.main.games.towerdefense.tower;
 
 import org.bukkit.Material;
 
-import com.minersleague.main.towerdefense.BlockMetaData;
+import com.minersleague.main.games.towerdefense.BlockMetaData;
 
 public class TowerBlock {
 

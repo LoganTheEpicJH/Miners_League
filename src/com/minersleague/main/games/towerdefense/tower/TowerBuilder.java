@@ -1,12 +1,12 @@
-package com.minersleague.main.towerdefense.tower;
+package com.minersleague.main.games.towerdefense.tower;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import com.minersleague.main.towerdefense.BlockMetaData;
-import com.minersleague.main.towerdefense.IDAble;
-import com.minersleague.main.towerdefense.mechanics.Animation;
-import com.minersleague.main.towerdefense.tower.function.TowerFunction;
+import com.minersleague.main.games.towerdefense.BlockMetaData;
+import com.minersleague.main.games.towerdefense.IDAble;
+import com.minersleague.main.games.towerdefense.mechanics.Animation;
+import com.minersleague.main.games.towerdefense.tower.function.TowerFunction;
 import com.minersleague.main.util.Utilities;
 
 public class TowerBuilder extends IDAble implements Runnable {

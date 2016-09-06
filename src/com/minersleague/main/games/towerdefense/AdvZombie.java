@@ -1,4 +1,4 @@
-package com.minersleague.main.towerdefense;
+package com.minersleague.main.games.towerdefense;
 
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;

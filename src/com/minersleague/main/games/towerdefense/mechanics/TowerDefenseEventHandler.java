@@ -1,4 +1,4 @@
-package com.minersleague.main.towerdefense.mechanics;
+package com.minersleague.main.games.towerdefense.mechanics;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -11,10 +11,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.minersleague.main.towerdefense.PlayingStage;
-import com.minersleague.main.towerdefense.TowerDefenseInventory;
-import com.minersleague.main.towerdefense.tower.Tower;
-import com.minersleague.main.towerdefense.tower.Towers;
+import com.minersleague.main.games.towerdefense.Game;
+import com.minersleague.main.games.towerdefense.PlayingStage;
+import com.minersleague.main.games.towerdefense.TowerDefenseInventory;
+import com.minersleague.main.games.towerdefense.tower.Tower;
+import com.minersleague.main.games.towerdefense.tower.Towers;
 import com.minersleague.main.util.Utilities;
 
 public class TowerDefenseEventHandler implements Listener {
@@ -24,6 +25,8 @@ public class TowerDefenseEventHandler implements Listener {
 		if(e.getEntity() instanceof Zombie) {
 			Zombie zombie = (Zombie)e.getEntity();
 			if(zombie.getCustomName()!=null) {
+				Game game = Utilities.games.get(zombie.getCustomName().split("-")[1]);
+				game.zombieKilled();
 				e.setDroppedExp(0);
 				e.getDrops().clear();
 			}
@@ -33,7 +36,7 @@ public class TowerDefenseEventHandler implements Listener {
 	@EventHandler
 	public void onItemClick(PlayerInteractEvent e) {
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)||e.getAction().equals(Action.LEFT_CLICK_AIR)) {
-			if(Utilities.playingStage.get(e.getPlayer().getName())==PlayingStage.PLAYING) {
+			if(Utilities.gameIn.get(e.getPlayer().getName()).getPlayingStage()==PlayingStage.PLAYING) {
 				e.setCancelled(true);
 				e.getPlayer().openInventory(TowerDefenseInventory.getTowerDefenseInv());
 			}
@@ -63,7 +66,7 @@ public class TowerDefenseEventHandler implements Listener {
 							Tower tower = Towers.towers.get(spawnID);
 							String prefix = null;
 							if(Utilities.gameIn.get(p.getName())!=null) {
-								prefix = Utilities.gameIn.get(p.getName());
+								prefix = Utilities.gameIn.get(p.getName()).getGameName();
 							} else {
 								prefix = "ML1";
 							}

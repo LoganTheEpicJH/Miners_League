@@ -14,30 +14,64 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.minersleague.main.Main;
-import com.minersleague.main.towerdefense.Game;
-import com.minersleague.main.towerdefense.PlayingStage;
-import com.minersleague.main.towerdefense.TowerDefenseInventory;
-import com.minersleague.main.towerdefense.mechanics.Animation;
-import com.minersleague.main.towerdefense.mechanics.Animator;
-import com.minersleague.main.towerdefense.mechanics.GameStarter;
-import com.minersleague.main.towerdefense.tower.TowerBuilder;
-import com.minersleague.main.towerdefense.tower.function.TowerFunction;
+import com.minersleague.main.games.towerdefense.Game;
+import com.minersleague.main.games.towerdefense.PlayingStage;
+import com.minersleague.main.games.towerdefense.TowerDefenseInventory;
+import com.minersleague.main.games.towerdefense.TowerDefensePlayerStorage;
+import com.minersleague.main.games.towerdefense.mechanics.Animation;
+import com.minersleague.main.games.towerdefense.mechanics.Animator;
+import com.minersleague.main.games.towerdefense.mechanics.GameStarter;
+import com.minersleague.main.games.towerdefense.tower.TowerBuilder;
+import com.minersleague.main.games.towerdefense.tower.function.TowerFunction;
 import com.minersleague.main.util.Utilities;
 
-public class CMD_Game extends MinersLeagueCommand {
+public class CMD_GameTowerDefense extends MinersLeagueCommand {
 
-	public CMD_Game() {
-		super("game");
+	public CMD_GameTowerDefense() {
+		super("towerdefense");
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, String[] args) {
 		Player p = (Player)sender;
 		String msg = null;
+		if(p.hasPermission("minersleague.rank.miner")||p.hasPermission("minersleague.rank.developer")) {
+			if(args.length==1) {
+				if(args[0].equalsIgnoreCase("leave")) {
+					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.IN_LOBBY) {
+						Game game = Utilities.games.get(Utilities.gameIn.get(p.getName()));
+						game.removePlayer(p.getName());
+						Utilities.gameIn.put(p.getName(), new TowerDefensePlayerStorage(p.getName(), PlayingStage.NONE));
+						return true;
+					}
+					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.NONE) {
+						messagePlayer(p, "&cYour not in a Game");
+						return true;
+					}
+					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.PLAYING) {
+						messagePlayer(p, "&cYou cant leave a Runngin Game!");
+						return true;
+					}
+				}
+			}
+		}
 		if(p.hasPermission("minersleague.rank.developer")) {
 			if(args.length==1) {
 				if(args[0].equalsIgnoreCase("leave")) {
-					
+					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.IN_LOBBY) {
+						Game game = Utilities.games.get(Utilities.gameIn.get(p.getName()));
+						game.removePlayer(p.getName());
+						Utilities.gameIn.put(p.getName(), new TowerDefensePlayerStorage(p.getName(), PlayingStage.NONE));
+						return true;
+					}
+					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.NONE) {
+						messagePlayer(p, "&cYour not in a Game");
+						return true;
+					}
+					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.PLAYING) {
+						messagePlayer(p, "&cYou cant leave a Runngin Game!");
+						return true;
+					}
 				}
 				if(args[0].equalsIgnoreCase("build")) {
 					p.openInventory(TowerDefenseInventory.getTowerDefenseInv());
@@ -50,7 +84,7 @@ public class CMD_Game extends MinersLeagueCommand {
 					if(name.equalsIgnoreCase("--all")) {
 						Bukkit.getServer().getPluginManager().disablePlugin(Main.plugin);
 						Bukkit.getServer().getPluginManager().enablePlugin(Main.plugin);
-						p.sendMessage(Utilities.color("&cYou Reloaded the Plugin"));
+						messagePlayer(p, "&cYou Reloaded the Plugin");
 					} else {
 						int active_animators = 0;
 						// int inactive_animators = 0;
@@ -60,17 +94,17 @@ public class CMD_Game extends MinersLeagueCommand {
 								if(id.contains("TowerBuilder")) {
 									TowerBuilder tb = (TowerBuilder)idLinkObj;
 									tb.interrupt();
-									p.sendMessage(Utilities.color("&cYou Stopped "+"&bTowerBuilder: "+id));
+									messagePlayer(p, "&cYou Stopped "+"&bTowerBuilder: "+id);
 								}
 								if(id.contains("Animation")) {
 									Animation animation = (Animation)idLinkObj;
 									animation.stop();
-									p.sendMessage(Utilities.color("&cYou Stopped "+"&dAnimation: "+id));
+									messagePlayer(p, "&cYou Stopped "+"&dAnimation: "+id);
 								}
 								if(id.contains("GameStarter")) {
 									GameStarter gs = (GameStarter)idLinkObj;
 									gs.endGame();
-									p.sendMessage(Utilities.color("&cYou Stopped "+"&aGameMechanic: "+id));
+									messagePlayer(p, "&cYou Stopped "+"&aGameMechanic: "+id);
 								}
 								if(id.contains("Animator")) {
 									Animator animator = (Animator)idLinkObj;
@@ -95,13 +129,13 @@ public class CMD_Game extends MinersLeagueCommand {
 								}
 							}
 						}
-						// p.sendMessage(Utilities.color("&cYou stopped &d"+inactive_animators+" &cInactive and&d "+active_animators+" &cActive Animators (Total: "+(active_animators+inactive_animators)+")"));
+						// msg(p, "&cYou stopped &d"+inactive_animators+" &cInactive and&d "+active_animators+" &cActive Animators (Total: "+(active_animators+inactive_animators)+")"));
 						String threadMsg = "&cYou stopped &d"+active_animators+" &cactive Thread";
 						if(active_animators==0||active_animators>1) {
 							threadMsg = threadMsg+"s";
 						}
-						p.sendMessage(Utilities.color(threadMsg));
-						p.sendMessage(Utilities.color("&cStopped all Threads with id-Prefix "+args[2]));
+						messagePlayer(p, threadMsg);
+						messagePlayer(p, "&cStopped all Threads with id-Prefix "+args[2]);
 						return true;
 					}
 					return true;
@@ -113,9 +147,8 @@ public class CMD_Game extends MinersLeagueCommand {
 					Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), game.getLobby(), game.getPlayground(), playersIn));
 					p.teleport(Utilities.games.get(name).getLobby());
 					p.setGameMode(GameMode.CREATIVE);
-					p.sendMessage(Utilities.color("&cYou joined "+name));
-					Utilities.gameIn.put(p.getName(), name);
-					Utilities.playingStage.put(p.getName(), PlayingStage.IN_LOBBY);
+					messagePlayer(p, "&cYou joined "+name);
+					Utilities.gameIn.put(p.getName(), new TowerDefensePlayerStorage(name, PlayingStage.IN_LOBBY));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("load")) {
@@ -127,7 +160,7 @@ public class CMD_Game extends MinersLeagueCommand {
 					Location play = new Location(pointWorld, cfg.getDouble("game."+name+".play.x"), cfg.getDouble("game."+name+".play.y"), cfg.getDouble("game."+name+".play.z"));
 					Location lobby = new Location(Bukkit.getServer().getWorld(cfg.getString("game."+name+".lobby.world")), cfg.getDouble("game."+name+".lobby.x"), cfg.getDouble("game."+name+".lobby.y"), cfg.getDouble("game."+name+".lobby.z"));
 					Utilities.games.put(name, new Game(name, start, end, lobby, play, new ArrayList<String>()));
-					p.sendMessage(Utilities.color("&cSuccessfully loaded Game "+name+" from File"));
+					messagePlayer(p, "&cSuccessfully loaded Game "+name+" from File");
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("save")) {
@@ -156,38 +189,26 @@ public class CMD_Game extends MinersLeagueCommand {
 						} catch(IOException e) {
 							e.printStackTrace();
 						}
-						p.sendMessage(Utilities.color("&cSuccessfully saved Game "+name+" to File"));
+						messagePlayer(p, "&cSuccessfully saved Game "+name+" to File");
 						return true;
 					} else {
 						msg = "No Game-Save";
 					}
 				}
 				if(args[0].equalsIgnoreCase("stop")) {
-					if(Utilities.gameRunners.keySet().contains(name)&&Utilities.gameRunners.get(name)!=null) {
-						GameStarter gs = Utilities.gameRunners.get(name);
-						gs.endGame();
-						Utilities.gameRunners.put(name, null);
-						p.sendMessage(Utilities.color("&cStopped "+name));
-						return true;
-					} else {
-						msg = "No Game Running";
-					}
+					Utilities.stopAllGameActions(Utilities.games.get(name));
+					messagePlayer(p, "&cYou stopped Game "+name);
+					return true;
 				}
 				if(args[0].equalsIgnoreCase("start")) {
-					if(Utilities.gameRunners.get(name)!=null) {
-						Utilities.gameRunners.get(name).endGame();
-						Utilities.gameRunners.put(name, null);
-					}
-					GameStarter gs = new GameStarter();
-					gs.initGameStart(Utilities.games.get(name));
-					Utilities.gameRunners.put(name, gs);
-					p.sendMessage(Utilities.color("&cSuccessfully started "+name));
+					new GameStarter(Utilities.games.get(name));
+					messagePlayer(p, "&cSuccessfully started "+name);
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("create")) {
 					if(!Utilities.games.keySet().contains(name)) {
 						Utilities.games.put(name, new Game(name, null, null, null, null, new ArrayList<String>()));
-						p.sendMessage(Utilities.color("&cCreated Game "+name));
+						messagePlayer(p, "&cCreated Game "+name);
 						return true;
 					} else {
 						msg = "Already Exists";
@@ -206,17 +227,17 @@ public class CMD_Game extends MinersLeagueCommand {
 								if(id.contains("TowerBuilder")) {
 									TowerBuilder tb = (TowerBuilder)idLinkObj;
 									tb.interrupt();
-									p.sendMessage(Utilities.color("&cYou Stopped "+"&bTowerBuilder: "+id));
+									messagePlayer(p, "&cYou Stopped "+"&bTowerBuilder: "+id);
 								}
 								if(id.contains("Animation")) {
 									Animation animation = (Animation)idLinkObj;
 									animation.stop();
-									p.sendMessage(Utilities.color("&cYou Stopped "+"&dAnimation: "+id));
+									messagePlayer(p, "&cYou Stopped "+"&dAnimation: "+id);
 								}
 								if(id.contains("GameStarter")) {
 									GameStarter gs = (GameStarter)idLinkObj;
 									gs.endGame();
-									p.sendMessage(Utilities.color("&cYou Stopped "+"&aGameMechanic: "+id));
+									messagePlayer(p, "&cYou Stopped "+"&aGameMechanic: "+id);
 								}
 								if(id.contains("Animator")) {
 									Animator animator = (Animator)idLinkObj;
@@ -241,13 +262,13 @@ public class CMD_Game extends MinersLeagueCommand {
 								}
 							}
 						}
-						// p.sendMessage(Utilities.color("&cYou stopped &d"+inactive_animators+" &cInactive and&d "+active_animators+" &cActive Animators (Total: "+(active_animators+inactive_animators)+")"));
+						// msg(p, "&cYou stopped &d"+inactive_animators+" &cInactive and&d "+active_animators+" &cActive Animators (Total: "+(active_animators+inactive_animators)+")"));
 						String threadMsg = "&cYou stopped &d"+active_animators+" &cactive Thread";
 						if(active_animators==0||active_animators>1) {
 							threadMsg = threadMsg+"s";
 						}
-						p.sendMessage(Utilities.color(threadMsg));
-						p.sendMessage(Utilities.color("&cStopped all Threads with id-Prefix "+args[2]));
+						messagePlayer(p, threadMsg);
+						messagePlayer(p, "&cStopped all Threads with id-Prefix "+args[2]);
 						return true;
 					}
 				}
@@ -256,7 +277,7 @@ public class CMD_Game extends MinersLeagueCommand {
 						if(Utilities.games.keySet().contains(name)) {
 							Game game = Utilities.games.get(name);
 							Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), game.getLobby(), p.getLocation(), game.getPlayersPlaying()));
-							p.sendMessage(Utilities.color("&c"+name+"'s Playground was set"));
+							messagePlayer(p, "&c"+name+"'s Playground was set");
 							return true;
 						} else {
 							msg = "Does not Exist";
@@ -266,7 +287,7 @@ public class CMD_Game extends MinersLeagueCommand {
 						if(Utilities.games.keySet().contains(name)) {
 							Game game = Utilities.games.get(name);
 							Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), p.getLocation(), game.getPlayground(), game.getPlayersPlaying()));
-							p.sendMessage(Utilities.color("&c"+name+"'s Lobby was set"));
+							messagePlayer(p, "&c"+name+"'s Lobby was set");
 							return true;
 						} else {
 							msg = "Does not Exist";
@@ -276,7 +297,7 @@ public class CMD_Game extends MinersLeagueCommand {
 						if(Utilities.games.keySet().contains(name)) {
 							Game game = Utilities.games.get(name);
 							Utilities.games.put(name, new Game(name, game.getStart(), p.getLocation(), game.getLobby(), game.getPlayground(), game.getPlayersPlaying()));
-							p.sendMessage(Utilities.color("&c"+name+"'s Endpoint was set"));
+							messagePlayer(p, "&c"+name+"'s Endpoint was set");
 							return true;
 						} else {
 							msg = "Does not Exist";
@@ -286,7 +307,7 @@ public class CMD_Game extends MinersLeagueCommand {
 						if(Utilities.games.keySet().contains(name)) {
 							Game game = Utilities.games.get(name);
 							Utilities.games.put(name, new Game(name, p.getLocation(), game.getEnd(), game.getLobby(), game.getPlayground(), game.getPlayersPlaying()));
-							p.sendMessage(Utilities.color("&c"+name+"'s Startpoint was set"));
+							messagePlayer(p, "&c"+name+"'s Startpoint was set");
 							return true;
 						} else {
 							msg = "Does not Exist";
@@ -295,8 +316,12 @@ public class CMD_Game extends MinersLeagueCommand {
 				}
 			}
 		}
-		p.sendMessage(Utilities.color("&cError: "+msg));
+		messagePlayer(p, "&cError: "+msg);
 		return true;
 	}
 
+	public static void messagePlayer(Player p, String msg) {
+		p.sendMessage(Utilities.color(msg));
+	}
+	
 }

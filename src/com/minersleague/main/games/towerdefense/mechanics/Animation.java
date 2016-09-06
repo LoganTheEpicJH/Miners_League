@@ -1,8 +1,8 @@
-package com.minersleague.main.towerdefense.mechanics;
+package com.minersleague.main.games.towerdefense.mechanics;
 
-import com.minersleague.main.towerdefense.IDAble;
-import com.minersleague.main.towerdefense.tower.TowerBuilder;
-import com.minersleague.main.towerdefense.tower.TowerStage;
+import com.minersleague.main.games.towerdefense.IDAble;
+import com.minersleague.main.games.towerdefense.tower.TowerBuilder;
+import com.minersleague.main.games.towerdefense.tower.TowerStage;
 import com.minersleague.main.util.Utilities;
 
 public class Animation extends IDAble implements Runnable {
