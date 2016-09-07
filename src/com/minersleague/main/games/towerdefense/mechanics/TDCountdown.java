@@ -4,18 +4,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import com.minersleague.main.games.generall.SimpleThread;
 import com.minersleague.main.util.Utilities;
 
-public class Countdown implements Runnable {
+public class TDCountdown extends SimpleThread {
 
 	public boolean done;
-	private GameStarter gs;
+	private TDGameRunner gs;
 	private int countdown;
-
-	public Countdown(GameStarter gs, int countdown) {
+	
+	public TDCountdown(TDGameRunner gs, int countdown) {
 		done = false;
 		this.gs = gs;
 		this.countdown = countdown;
+		executeThread(this);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -25,6 +27,7 @@ public class Countdown implements Runnable {
 			if(countdown==0) {
 				done = true;
 				gs.startGame();
+				cancelThread();
 			} else {
 				countdown--;
 				for(String up : gs.game.getPlayersPlaying()) {

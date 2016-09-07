@@ -2,7 +2,9 @@ package com.minersleague.main.games.towerdefense.tower.function;
 
 import org.bukkit.Location;
 
-public abstract class TowerFunction implements Runnable {
+import com.minersleague.main.games.generall.SimpleThread;
+
+public abstract class TowerFunction extends SimpleThread {
 
 	public Location towerPos;
 	public boolean repeating;

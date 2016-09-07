@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.minersleague.main.util.Utilities;
 
-public class Game {
+public class TDGame {
 
 	private String name;
 	private Location start;
@@ -19,13 +19,13 @@ public class Game {
 	private ArrayList<String> joined;
 	private int towerAt;
 	private int dead;
-	private int lifes;
 	private int zombiesPassed;
 	public boolean lost;
+	public boolean won;
 	
-	public Game() {}
+	public TDGame() {}
 	
-	public Game(String name, Location start, Location end, Location lobby, Location game, ArrayList<String> playersIn) {
+	public TDGame(String name, Location start, Location end, Location lobby, Location game, ArrayList<String> playersIn) {
 		joined = playersIn;
 		this.name = name;
 		this.start = start;
@@ -34,9 +34,9 @@ public class Game {
 		this.game = game;
 		towerAt = 0;
 		this.dead = 0; 
-		this.lifes = 3;
 		this.zombiesPassed = 0;
 		lost = false;
+		won = false;
 	}
 	
 	public int getNextTowerID() {
@@ -48,15 +48,13 @@ public class Game {
 	public void zombiePassed() {
 		for(String s : joined) {
 			Player p = Bukkit.getServer().getPlayer(s);
-			/* ♥ */
-			lifes--;
-			if(lifes==0) {
+			if(zombiesPassed==3) {
 				p.sendTitle(Utilities.color("&cGAME OVER"), Utilities.color("&aYou lost all Lifes"));
 				p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 1, 0);
 				lost = true;
 			} else {
 				StringBuilder sb = new StringBuilder();
-				for(int i = 1; i<=lifes; i++) {
+				for(int i = 1; i<=zombiesPassed; i++) {
 					sb.append("♥");
 				}
 				p.sendTitle(Utilities.color("&cA Zombie reached the END!"), Utilities.color("&aLifes &4"+sb.toString()));

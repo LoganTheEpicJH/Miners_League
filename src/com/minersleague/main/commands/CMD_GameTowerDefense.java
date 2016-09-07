@@ -14,13 +14,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.minersleague.main.Main;
-import com.minersleague.main.games.towerdefense.Game;
-import com.minersleague.main.games.towerdefense.PlayingStage;
+import com.minersleague.main.games.generall.PlayerStorage;
+import com.minersleague.main.games.generall.PlayingStage;
+import com.minersleague.main.games.generall.util.TDUtils;
+import com.minersleague.main.games.towerdefense.TDGame;
 import com.minersleague.main.games.towerdefense.TowerDefenseInventory;
-import com.minersleague.main.games.towerdefense.TowerDefensePlayerStorage;
-import com.minersleague.main.games.towerdefense.mechanics.Animation;
-import com.minersleague.main.games.towerdefense.mechanics.Animator;
-import com.minersleague.main.games.towerdefense.mechanics.GameStarter;
+import com.minersleague.main.games.towerdefense.mechanics.TDAnimation;
+import com.minersleague.main.games.towerdefense.mechanics.TDAnimator;
+import com.minersleague.main.games.towerdefense.mechanics.TDGameRunner;
+import com.minersleague.main.games.towerdefense.tower.TowerBreaker;
 import com.minersleague.main.games.towerdefense.tower.TowerBuilder;
 import com.minersleague.main.games.towerdefense.tower.function.TowerFunction;
 import com.minersleague.main.util.Utilities;
@@ -38,17 +40,17 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 		if(p.hasPermission("minersleague.rank.miner")||p.hasPermission("minersleague.rank.developer")) {
 			if(args.length==1) {
 				if(args[0].equalsIgnoreCase("leave")) {
-					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.IN_LOBBY) {
-						Game game = Utilities.games.get(Utilities.gameIn.get(p.getName()));
+					if(TDUtils.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.IN_LOBBY) {
+						TDGame game = TDUtils.games.get(TDUtils.gameIn.get(p.getName()));
 						game.removePlayer(p.getName());
-						Utilities.gameIn.put(p.getName(), new TowerDefensePlayerStorage(p.getName(), PlayingStage.NONE));
+						TDUtils.gameIn.put(p.getName(), new PlayerStorage(p.getName(), PlayingStage.NONE));
 						return true;
 					}
-					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.NONE) {
+					if(TDUtils.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.NONE) {
 						messagePlayer(p, "&cYour not in a Game");
 						return true;
 					}
-					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.PLAYING) {
+					if(TDUtils.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.PLAYING) {
 						messagePlayer(p, "&cYou cant leave a Runngin Game!");
 						return true;
 					}
@@ -58,17 +60,17 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 		if(p.hasPermission("minersleague.rank.developer")) {
 			if(args.length==1) {
 				if(args[0].equalsIgnoreCase("leave")) {
-					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.IN_LOBBY) {
-						Game game = Utilities.games.get(Utilities.gameIn.get(p.getName()));
+					if(TDUtils.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.IN_LOBBY) {
+						TDGame game = TDUtils.games.get(TDUtils.gameIn.get(p.getName()));
 						game.removePlayer(p.getName());
-						Utilities.gameIn.put(p.getName(), new TowerDefensePlayerStorage(p.getName(), PlayingStage.NONE));
+						TDUtils.gameIn.put(p.getName(), new PlayerStorage(p.getName(), PlayingStage.NONE));
 						return true;
 					}
-					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.NONE) {
+					if(TDUtils.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.NONE) {
 						messagePlayer(p, "&cYour not in a Game");
 						return true;
 					}
-					if(Utilities.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.PLAYING) {
+					if(TDUtils.gameIn.get(p.getName()).getPlayingStage()==PlayingStage.PLAYING) {
 						messagePlayer(p, "&cYou cant leave a Runngin Game!");
 						return true;
 					}
@@ -88,26 +90,21 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 					} else {
 						int active_animators = 0;
 						// int inactive_animators = 0;
-						for(String id : Utilities.idLink.keySet()) {
+						for(String id : TDUtils.idLink.keySet()) {
 							if(id.startsWith(args[1])) {
-								Object idLinkObj = Utilities.idLink.get(id);
-								if(id.contains("TowerBuilder")) {
-									TowerBuilder tb = (TowerBuilder)idLinkObj;
-									tb.interrupt();
-									messagePlayer(p, "&cYou Stopped "+"&bTowerBuilder: "+id);
-								}
+								Object idLinkObj = TDUtils.idLink.get(id);
 								if(id.contains("Animation")) {
-									Animation animation = (Animation)idLinkObj;
+									TDAnimation animation = (TDAnimation)idLinkObj;
 									animation.stop();
 									messagePlayer(p, "&cYou Stopped "+"&dAnimation: "+id);
 								}
 								if(id.contains("GameStarter")) {
-									GameStarter gs = (GameStarter)idLinkObj;
+									TDGameRunner gs = (TDGameRunner)idLinkObj;
 									gs.endGame();
 									messagePlayer(p, "&cYou Stopped "+"&aGameMechanic: "+id);
 								}
 								if(id.contains("Animator")) {
-									Animator animator = (Animator)idLinkObj;
+									TDAnimator animator = (TDAnimator)idLinkObj;
 									if(!animator.done) {
 										active_animators++;
 									}
@@ -127,6 +124,12 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 									}
 									tf.repeating = false;
 								}
+								if(id.contains("TowerBuilder")) {
+									TowerBuilder tb = (TowerBuilder)idLinkObj;
+									new TowerBreaker(tb.location);
+									tb.interrupt();
+									messagePlayer(p, "&cYou Stopped "+"&bTowerBuilder: "+id);
+								}
 							}
 						}
 						// msg(p, "&cYou stopped &d"+inactive_animators+" &cInactive and&d "+active_animators+" &cActive Animators (Total: "+(active_animators+inactive_animators)+")"));
@@ -141,14 +144,14 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("join")) {
-					Game game = Utilities.games.get(name);
+					TDGame game = TDUtils.games.get(name);
 					ArrayList<String> playersIn = game.getPlayersPlaying();
 					playersIn.add(p.getName());
-					Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), game.getLobby(), game.getPlayground(), playersIn));
-					p.teleport(Utilities.games.get(name).getLobby());
+					TDUtils.games.put(name, new TDGame(name, game.getStart(), game.getEnd(), game.getLobby(), game.getPlayground(), playersIn));
+					p.teleport(TDUtils.games.get(name).getLobby());
 					p.setGameMode(GameMode.CREATIVE);
 					messagePlayer(p, "&cYou joined "+name);
-					Utilities.gameIn.put(p.getName(), new TowerDefensePlayerStorage(name, PlayingStage.IN_LOBBY));
+					TDUtils.gameIn.put(p.getName(), new PlayerStorage(name, PlayingStage.IN_LOBBY));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("load")) {
@@ -159,15 +162,15 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 					Location end = new Location(pointWorld, cfg.getDouble("game."+name+".end.x"), cfg.getDouble("game."+name+".end.y"), cfg.getDouble("game."+name+".end.z"));
 					Location play = new Location(pointWorld, cfg.getDouble("game."+name+".play.x"), cfg.getDouble("game."+name+".play.y"), cfg.getDouble("game."+name+".play.z"));
 					Location lobby = new Location(Bukkit.getServer().getWorld(cfg.getString("game."+name+".lobby.world")), cfg.getDouble("game."+name+".lobby.x"), cfg.getDouble("game."+name+".lobby.y"), cfg.getDouble("game."+name+".lobby.z"));
-					Utilities.games.put(name, new Game(name, start, end, lobby, play, new ArrayList<String>()));
+					TDUtils.games.put(name, new TDGame(name, start, end, lobby, play, new ArrayList<String>()));
 					messagePlayer(p, "&cSuccessfully loaded Game "+name+" from File");
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("save")) {
-					if(Utilities.games.keySet().contains(name)&&Utilities.games.get(name)!=null) {
+					if(TDUtils.games.keySet().contains(name)&&TDUtils.games.get(name)!=null) {
 						File f = new File(Main.plugin.getDataFolder(), "games.yml");
 						FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
-						Game game = Utilities.games.get(name);
+						TDGame game = TDUtils.games.get(name);
 						// Name, Start, End, Lobby, PlayGround
 						cfg.set("game."+name+".name", name);
 						cfg.set("game."+name+".start.x", game.getStart().getX());
@@ -196,18 +199,18 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 					}
 				}
 				if(args[0].equalsIgnoreCase("stop")) {
-					Utilities.stopAllGameActions(Utilities.games.get(name));
+					TDUtils.stopAllGameActions(TDUtils.games.get(name));
 					messagePlayer(p, "&cYou stopped Game "+name);
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("start")) {
-					new GameStarter(Utilities.games.get(name));
+					new TDGameRunner(TDUtils.games.get(name));
 					messagePlayer(p, "&cSuccessfully started "+name);
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("create")) {
-					if(!Utilities.games.keySet().contains(name)) {
-						Utilities.games.put(name, new Game(name, null, null, null, null, new ArrayList<String>()));
+					if(!TDUtils.games.keySet().contains(name)) {
+						TDUtils.games.put(name, new TDGame(name, null, null, null, null, new ArrayList<String>()));
 						messagePlayer(p, "&cCreated Game "+name);
 						return true;
 					} else {
@@ -221,26 +224,21 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 					if(name.equalsIgnoreCase("ani")) {
 						int active_animators = 0;
 						// int inactive_animators = 0;
-						for(String id : Utilities.idLink.keySet()) {
+						for(String id : TDUtils.idLink.keySet()) {
 							if(id.startsWith(args[2])) {
-								Object idLinkObj = Utilities.idLink.get(id);
-								if(id.contains("TowerBuilder")) {
-									TowerBuilder tb = (TowerBuilder)idLinkObj;
-									tb.interrupt();
-									messagePlayer(p, "&cYou Stopped "+"&bTowerBuilder: "+id);
-								}
+								Object idLinkObj = TDUtils.idLink.get(id);
 								if(id.contains("Animation")) {
-									Animation animation = (Animation)idLinkObj;
+									TDAnimation animation = (TDAnimation)idLinkObj;
 									animation.stop();
-									messagePlayer(p, "&cYou Stopped "+"&dAnimation: "+id);
+									messagePlayer(p, "&cYou stopped "+"&dAnimation: "+id);
 								}
 								if(id.contains("GameStarter")) {
-									GameStarter gs = (GameStarter)idLinkObj;
+									TDGameRunner gs = (TDGameRunner)idLinkObj;
 									gs.endGame();
-									messagePlayer(p, "&cYou Stopped "+"&aGameMechanic: "+id);
+									messagePlayer(p, "&cYou stopped "+"&aGameMechanic: "+id);
 								}
 								if(id.contains("Animator")) {
-									Animator animator = (Animator)idLinkObj;
+									TDAnimator animator = (TDAnimator)idLinkObj;
 									if(!animator.done) {
 										active_animators++;
 									}
@@ -260,6 +258,12 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 									}
 									tf.repeating = false;
 								}
+								if(id.contains("TowerBuilder")) {
+									TowerBuilder tb = (TowerBuilder)idLinkObj;
+									new TowerBreaker(tb.location);
+									tb.interrupt();
+									messagePlayer(p, "&cYou stopped "+"&bTowerBuilder: "+id);
+								}
 							}
 						}
 						// msg(p, "&cYou stopped &d"+inactive_animators+" &cInactive and&d "+active_animators+" &cActive Animators (Total: "+(active_animators+inactive_animators)+")"));
@@ -274,9 +278,9 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 				}
 				if(args[0].equalsIgnoreCase("set")) {
 					if(args[2].equalsIgnoreCase("play")) {
-						if(Utilities.games.keySet().contains(name)) {
-							Game game = Utilities.games.get(name);
-							Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), game.getLobby(), p.getLocation(), game.getPlayersPlaying()));
+						if(TDUtils.games.keySet().contains(name)) {
+							TDGame game = TDUtils.games.get(name);
+							TDUtils.games.put(name, new TDGame(name, game.getStart(), game.getEnd(), game.getLobby(), p.getLocation(), game.getPlayersPlaying()));
 							messagePlayer(p, "&c"+name+"'s Playground was set");
 							return true;
 						} else {
@@ -284,9 +288,9 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 						}
 					}
 					if(args[2].equalsIgnoreCase("lobby")) {
-						if(Utilities.games.keySet().contains(name)) {
-							Game game = Utilities.games.get(name);
-							Utilities.games.put(name, new Game(name, game.getStart(), game.getEnd(), p.getLocation(), game.getPlayground(), game.getPlayersPlaying()));
+						if(TDUtils.games.keySet().contains(name)) {
+							TDGame game = TDUtils.games.get(name);
+							TDUtils.games.put(name, new TDGame(name, game.getStart(), game.getEnd(), p.getLocation(), game.getPlayground(), game.getPlayersPlaying()));
 							messagePlayer(p, "&c"+name+"'s Lobby was set");
 							return true;
 						} else {
@@ -294,9 +298,9 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 						}
 					}
 					if(args[2].equalsIgnoreCase("end")) {
-						if(Utilities.games.keySet().contains(name)) {
-							Game game = Utilities.games.get(name);
-							Utilities.games.put(name, new Game(name, game.getStart(), p.getLocation(), game.getLobby(), game.getPlayground(), game.getPlayersPlaying()));
+						if(TDUtils.games.keySet().contains(name)) {
+							TDGame game = TDUtils.games.get(name);
+							TDUtils.games.put(name, new TDGame(name, game.getStart(), p.getLocation(), game.getLobby(), game.getPlayground(), game.getPlayersPlaying()));
 							messagePlayer(p, "&c"+name+"'s Endpoint was set");
 							return true;
 						} else {
@@ -304,9 +308,9 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 						}
 					}
 					if(args[2].equalsIgnoreCase("start")) {
-						if(Utilities.games.keySet().contains(name)) {
-							Game game = Utilities.games.get(name);
-							Utilities.games.put(name, new Game(name, p.getLocation(), game.getEnd(), game.getLobby(), game.getPlayground(), game.getPlayersPlaying()));
+						if(TDUtils.games.keySet().contains(name)) {
+							TDGame game = TDUtils.games.get(name);
+							TDUtils.games.put(name, new TDGame(name, p.getLocation(), game.getEnd(), game.getLobby(), game.getPlayground(), game.getPlayersPlaying()));
 							messagePlayer(p, "&c"+name+"'s Startpoint was set");
 							return true;
 						} else {
@@ -323,5 +327,5 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 	public static void messagePlayer(Player p, String msg) {
 		p.sendMessage(Utilities.color(msg));
 	}
-	
+
 }

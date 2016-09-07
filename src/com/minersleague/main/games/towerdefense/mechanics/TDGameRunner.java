@@ -13,40 +13,66 @@ import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.Zombie;
 import org.spigotmc.AsyncCatcher;
 
+import com.minersleague.main.games.generall.PlayerStorage;
+import com.minersleague.main.games.generall.PlayingStage;
+import com.minersleague.main.games.generall.SimpleThread;
+import com.minersleague.main.games.generall.util.TDUtils;
 import com.minersleague.main.games.towerdefense.AdvZombie;
-import com.minersleague.main.games.towerdefense.Game;
-import com.minersleague.main.games.towerdefense.IDAble;
-import com.minersleague.main.games.towerdefense.PlayingStage;
-import com.minersleague.main.games.towerdefense.TowerDefensePlayerStorage;
+import com.minersleague.main.games.towerdefense.TDGame;
 import com.minersleague.main.util.Utilities;
 
-public class GameStarter extends IDAble implements Runnable {
+public class TDGameRunner extends SimpleThread {
 
 	public static boolean running;
 	public boolean allowed;
-	public Game game;
-	private GameStarter gs;
-	public Countdown c;
-	private Rounds round;
+	public TDGame game;
+	private TDGameRunner gs;
+	public TDCountdown c;
+	private TDRounds round;
 	private LivingEntity lentity;
 	public String id;
-	public Thread thread;
 
-	public GameStarter(Game game) {
+	public TDGameRunner(TDGame game) {
 		AsyncCatcher.enabled = false;
 		id = setID(game.getName()+"-GameStarter");
 		gs = this;
 		this.game = game;
-		c = new Countdown(gs, 61);
 		allowed = false;
 		running = true;
-		Utilities.idLink.put(id, gs);
+		TDUtils.idLink.put(id, gs);
+		startCountdown();
+	}
+
+	public void startCountdown() {
+		for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+			if(game.getPlayersPlaying().contains(p.getName())) {
+				p.teleport(game.getPlayground());
+				p.setGameMode(GameMode.CREATIVE);
+				TDUtils.gameIn.put(p.getName(), new PlayerStorage(game.getName(), PlayingStage.PLAYING));
+			}
+		}
+		c = new TDCountdown(gs, 31);
+	}
+
+	public void startGame() {
+		initGameStart();
+		round = new TDRounds();
+		for(Entity entity : game.getEnd().getWorld().getNearbyEntities(game.getEnd(), 2d, 2d, 2d)) {
+			if(entity instanceof Villager) {
+				Villager v = (Villager)entity;
+				if(v.getCustomName().equals("End-"+game.getName())) {
+					lentity = (LivingEntity)entity;
+					break;
+				}
+			}
+		}
+		round.nextRound(game, lentity);
+		allowed = true;
 	}
 	
 	public void initGameStart() {
 		lentity = null;
-		thread = new Thread(gs);
-		thread.start();
+		executeThread(gs);
 		boolean foundVillager = false;
 		if(!game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 2D, 2D, 2D).isEmpty()) {
 			for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 2D, 2D, 2D)) {
@@ -66,43 +92,15 @@ public class GameStarter extends IDAble implements Runnable {
 			villager.setAI(false);
 			foundVillager = true;
 		}
-		for(Player p : Bukkit.getServer().getOnlinePlayers()) {
-			if(game.getPlayersPlaying().contains(p.getName())) {
-				p.teleport(game.getPlayground());
-				p.setGameMode(GameMode.CREATIVE);
-				Utilities.gameIn.put(p.getName(), new TowerDefensePlayerStorage(game.getName(), PlayingStage.PLAYING));
-			}
-		}
 	}
-
-	public void startCountdown() {
-		while(!game.getPlayersPlaying().isEmpty()) {}
-		new Thread(c).start();
-	}
-
-	public void startGame() {
-		initGameStart();
-		round = new Rounds();
-		for(Entity entity : game.getEnd().getWorld().getNearbyEntities(game.getEnd(), 2d, 2d, 2d)) {
-			if(entity instanceof Villager) {
-				Villager v = (Villager)entity;
-				if(v.getCustomName().equals("End-"+game.getName())) {
-					lentity = (LivingEntity)entity;
-					break;
-				}
-			}
-		}
-		round.nextRound(game, lentity);
-		allowed = true;
-	}
-
+	
 	public void endGame() {
 		running = false;
-		for(String s : Utilities.gameIn.keySet()) {
-			if(Utilities.gameIn.get(s)!=null) {
-				if(Utilities.gameIn.get(s).equals(game.getName())) {
-					Utilities.gameIn.put(s, null);
-					Utilities.gameIn.put(s, new TowerDefensePlayerStorage(game.getName(), PlayingStage.IN_LOBBY));
+		for(String s : TDUtils.gameIn.keySet()) {
+			if(TDUtils.gameIn.get(s)!=null) {
+				if(TDUtils.gameIn.get(s).equals(game.getName())) {
+					TDUtils.gameIn.put(s, null);
+					TDUtils.gameIn.put(s, new PlayerStorage(game.getName(), PlayingStage.IN_LOBBY));
 					Bukkit.getServer().getPlayer(s).teleport(game.getLobby());
 				}
 			}
@@ -115,22 +113,23 @@ public class GameStarter extends IDAble implements Runnable {
 			}
 		}
 		for(String up : game.getPlayersPlaying()) {
-			Utilities.gameIn.put(up, null);
+			TDUtils.gameIn.put(up, null);
 		}
-		thread.interrupt();
+		cancelThread();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 		while(running) {
-			if(round.completed) {
-				round.nextRound(game, lentity);
-				try {
-					Thread.sleep(1000);
-				} catch(InterruptedException e) {}
-			}
 			if(allowed) {
-				for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(new Location(game.getEnd().getWorld(), game.getEnd().getX(), game.getEnd().getBlockY()+2, game.getEnd().getZ()), 2d, 2d, 2d)) {
+				if(game.getZombiesKilled()>=round.zombiesForRound) {
+					round.nextRound(game, lentity);
+					try {
+						Thread.sleep(1000);
+					} catch(InterruptedException e) {}
+				}
+				for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(new Location(game.getEnd().getWorld(), game.getEnd().getX(), game.getEnd().getBlockY()+2, game.getEnd().getZ()), 2d, 3d, 2d)) {
 					if(entity instanceof Zombie) {
 						Zombie zombie = (Zombie)entity;
 						// System.out.println("Found Zombie zx: "+zombie.getLocation().getBlockX()+" zz: "+zombie.getLocation().getBlockY()+" | End x: "+game.getEnd().getBlockX()+" z: "+game.getEnd().getBlockZ());
@@ -139,7 +138,16 @@ public class GameStarter extends IDAble implements Runnable {
 							zombie.setHealth(0.0D);
 							game.zombiePassed();
 							if(game.lost) {
-								Utilities.stopAllGameActions(game);
+								TDUtils.stopAllGameActions(game);
+							}
+							if(game.won) {
+								TDUtils.stopAllGameActions(game);
+								for(String s : TDUtils.gameIn.keySet()) {
+									if(TDUtils.gameIn.get(s).getGameName().equals(game.getName())) {
+										TDUtils.gameIn.put(s, new PlayerStorage(s, PlayingStage.NONE));
+										Bukkit.getServer().getPlayer(s).sendTitle(Utilities.color("&a&lGAME WON"), Utilities.color("&c&lYou cleared all Rounds!"));
+									}
+								}
 							}
 						}
 					}

@@ -10,7 +10,7 @@ import org.bukkit.command.TabCompleter;
 
 import com.google.common.collect.Lists;
 
-public class CMD_GameTabCompleter implements TabCompleter {
+public class CMD_TDGameTabCompleter implements TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender arg0, Command arg1, String arg2, String[] args) {

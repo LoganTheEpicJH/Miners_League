@@ -1,11 +1,11 @@
-package com.minersleague.main.games.towerdefense;
+package com.minersleague.main.games.generall;
 
-public class TowerDefensePlayerStorage {
+public class PlayerStorage {
 	
 	PlayingStage playingStage;
 	String gameName;
 	
-	public TowerDefensePlayerStorage(String gameName, PlayingStage playingStage) {
+	public PlayerStorage(String gameName, PlayingStage playingStage) {
 		this.gameName = gameName;
 		this.playingStage = playingStage;
 	}

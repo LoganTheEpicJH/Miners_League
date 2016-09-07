@@ -1,23 +1,21 @@
 package com.minersleague.main.games.towerdefense.mechanics;
 
-import com.minersleague.main.games.towerdefense.IDAble;
+import com.minersleague.main.games.generall.SimpleThread;
+import com.minersleague.main.games.generall.util.TDUtils;
 import com.minersleague.main.games.towerdefense.tower.TowerBuilder;
 import com.minersleague.main.games.towerdefense.tower.TowerStage;
-import com.minersleague.main.util.Utilities;
 
-public class Animation extends IDAble implements Runnable {
+public class TDAnimation extends SimpleThread {
 
 	private TowerBuilder towerBuilder;
 	public boolean animate;
-	private Animator animator;
-	public Thread ownThread;
-	private Thread thread;
+	private TDAnimator animator;
 	private int done;
 	public String id;
 	private String gameName;
-	private Animation animation;
+	private TDAnimation animation;
 	
-	public Animation(String gameName, TowerBuilder towerBuilder) {
+	public TDAnimation(String gameName, TowerBuilder towerBuilder) {
 		this.gameName = gameName;
 		this.id = setID(gameName+"-Animation");
 		this.towerBuilder = towerBuilder;
@@ -25,19 +23,16 @@ public class Animation extends IDAble implements Runnable {
 		done = 0;
 		animation = this;
 		nextStage();
-		ownThread = new Thread(animation);
-		ownThread.start();
-		Utilities.idLink.put(id, animation);
+		executeThread(animation);
+		TDUtils.idLink.put(id, animation);
 	}
 	
 	public void stop() {
 		animate = false;
-		if(ownThread.isAlive()) {
-			ownThread.interrupt();
-		}
-		if(thread.isAlive()&&thread!=null) {
-			thread.interrupt();
-		}
+		cancelThread();
+		//if(thread.isAlive()&&thread!=null) {
+			//thread.interrupt();
+		//}
 		if(animator!=null) {
 			animator.done = true;
 		}
@@ -50,9 +45,9 @@ public class Animation extends IDAble implements Runnable {
 		TowerStage stage = towerBuilder.tower.getTowerStages().get(done);
 		if(stage!=null) {
 			//Location loc = new Location(towerBuilder.location.getWorld(), towerBuilder.location.getBlockX(), towerBuilder.location.getBlockY()+2.5, towerBuilder.location.getBlockZ()); //towerBuilder.location;
-			animator = new Animator(gameName, stage, towerBuilder.location);
-			thread = new Thread(animator);
-			thread.start();
+			animator = new TDAnimator(gameName, stage, towerBuilder.location);
+			//thread = new Thread(animator);
+			//thread.start();
 			done++;
 		}
 	}
@@ -61,9 +56,8 @@ public class Animation extends IDAble implements Runnable {
 	public void run() {
 		while(animate) {
 			if(animator.done) {
-				thread.interrupt();
+				animator.stop();
 				animator = null;
-				thread = null;
 				nextStage();
 			}
 			try {

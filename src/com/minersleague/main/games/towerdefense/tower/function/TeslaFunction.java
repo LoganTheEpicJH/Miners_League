@@ -37,6 +37,9 @@ public class TeslaFunction extends TowerFunction {
 	}
 
 	@Override
-	public void start() {}
+	public void start() {
+		repeating = true;
+		executeThread(this);
+	}
 
 }

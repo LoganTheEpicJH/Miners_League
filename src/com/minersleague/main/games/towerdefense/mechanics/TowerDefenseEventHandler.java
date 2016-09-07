@@ -11,8 +11,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.minersleague.main.games.towerdefense.Game;
-import com.minersleague.main.games.towerdefense.PlayingStage;
+import com.minersleague.main.games.generall.PlayingStage;
+import com.minersleague.main.games.generall.util.TDUtils;
+import com.minersleague.main.games.towerdefense.TDGame;
 import com.minersleague.main.games.towerdefense.TowerDefenseInventory;
 import com.minersleague.main.games.towerdefense.tower.Tower;
 import com.minersleague.main.games.towerdefense.tower.Towers;
@@ -25,24 +26,28 @@ public class TowerDefenseEventHandler implements Listener {
 		if(e.getEntity() instanceof Zombie) {
 			Zombie zombie = (Zombie)e.getEntity();
 			if(zombie.getCustomName()!=null) {
-				Game game = Utilities.games.get(zombie.getCustomName().split("-")[1]);
-				game.zombieKilled();
-				e.setDroppedExp(0);
-				e.getDrops().clear();
+				TDGame game = TDUtils.games.get(zombie.getCustomName().split("-")[1]);
+				if(game!=null) {
+					game.zombieKilled();
+					e.setDroppedExp(0);
+					e.getDrops().clear();
+				}
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onItemClick(PlayerInteractEvent e) {
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)||e.getAction().equals(Action.LEFT_CLICK_AIR)) {
-			if(Utilities.gameIn.get(e.getPlayer().getName()).getPlayingStage()==PlayingStage.PLAYING) {
-				e.setCancelled(true);
-				e.getPlayer().openInventory(TowerDefenseInventory.getTowerDefenseInv());
+			if(TDUtils.gameIn.get(e.getPlayer().getName())!=null) {
+				if(TDUtils.gameIn.get(e.getPlayer().getName()).getPlayingStage()==PlayingStage.PLAYING) {
+					e.setCancelled(true);
+					e.getPlayer().openInventory(TowerDefenseInventory.getTowerDefenseInv());
+				}
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onInvClick(InventoryClickEvent e) {
 		if(e.getWhoClicked() instanceof Player) {
@@ -62,16 +67,14 @@ public class TowerDefenseEventHandler implements Listener {
 								}
 							}
 							String spawnID = searchedLore.replace(Utilities.color("&cTowerSpawnID: &6"), "");
-							//System.out.println(Utilities.color(spawnID));
+							// System.out.println(Utilities.color(spawnID));
 							Tower tower = Towers.towers.get(spawnID);
 							String prefix = null;
-							if(Utilities.gameIn.get(p.getName())!=null) {
-								prefix = Utilities.gameIn.get(p.getName()).getGameName();
-							} else {
-								prefix = "ML1";
+							if(TDUtils.gameIn.get(p.getName())!=null) {
+								prefix = TDUtils.gameIn.get(p.getName()).getGameName();
+								Towers.buildTowner(prefix, spawnID, 500, tower, p.getLocation());
+								p.sendMessage(Utilities.color("&cTower "+spawnID+" is being created. Thread-Prefix: "+prefix));
 							}
-							Towers.buildTowner(prefix, spawnID, 500, tower, p.getLocation());
-							p.sendMessage(Utilities.color("&cTower "+spawnID+" is being created. Thread-Prefix: "+prefix));
 						}
 					}
 				}

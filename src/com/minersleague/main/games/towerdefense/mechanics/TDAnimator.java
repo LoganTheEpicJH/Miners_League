@@ -3,13 +3,13 @@ package com.minersleague.main.games.towerdefense.mechanics;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import com.minersleague.main.games.towerdefense.BlockMetaData;
-import com.minersleague.main.games.towerdefense.IDAble;
+import com.minersleague.main.games.generall.BlockMetaData;
+import com.minersleague.main.games.generall.SimpleThread;
+import com.minersleague.main.games.generall.util.TDUtils;
 import com.minersleague.main.games.towerdefense.tower.TowerBlock;
 import com.minersleague.main.games.towerdefense.tower.TowerStage;
-import com.minersleague.main.util.Utilities;
 
-public class Animator extends IDAble implements Runnable {
+public class TDAnimator extends SimpleThread {
 
 	private TowerStage stage;
 	private boolean started;
@@ -17,9 +17,9 @@ public class Animator extends IDAble implements Runnable {
 	private int blockAt;
 	private Location towerPos;
 	public String id;
-	private Animator animator;
+	private TDAnimator animator;
 
-	public Animator(String gameName, TowerStage stage, Location towerPos) {
+	public TDAnimator(String gameName, TowerStage stage, Location towerPos) {
 		this.id = setID(gameName+"-Animator");
 		this.stage = stage;
 		started = false;
@@ -27,11 +27,13 @@ public class Animator extends IDAble implements Runnable {
 		blockAt = 0;
 		this.towerPos = towerPos;
 		animator = this;
-		Utilities.idLink.put(id, null);
-		Utilities.idLink.put(id, animator);
+		executeThread(animator);
+		TDUtils.idLink.put(id, null);
+		TDUtils.idLink.put(id, animator);
 	}
 
 	public void stop() {
+		cancelThread();
 		done = true;
 	}
 	

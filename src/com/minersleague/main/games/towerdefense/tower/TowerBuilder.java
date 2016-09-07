@@ -3,13 +3,13 @@ package com.minersleague.main.games.towerdefense.tower;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import com.minersleague.main.games.towerdefense.BlockMetaData;
-import com.minersleague.main.games.towerdefense.IDAble;
-import com.minersleague.main.games.towerdefense.mechanics.Animation;
+import com.minersleague.main.games.generall.BlockMetaData;
+import com.minersleague.main.games.generall.SimpleThread;
+import com.minersleague.main.games.generall.util.TDUtils;
+import com.minersleague.main.games.towerdefense.mechanics.TDAnimation;
 import com.minersleague.main.games.towerdefense.tower.function.TowerFunction;
-import com.minersleague.main.util.Utilities;
 
-public class TowerBuilder extends IDAble implements Runnable {
+public class TowerBuilder extends SimpleThread {
 
 	private int x, y, z;
 	public Location location;
@@ -21,12 +21,11 @@ public class TowerBuilder extends IDAble implements Runnable {
 	public String id;
 	private String gameName;
 	private String towerID;
-	public Thread thread;
 
 	public TowerBuilder(String gameName, String towerID, Location location, Tower tower, long delay) {
 		this.gameName = gameName;
 		this.towerID = towerID;
-		id = setID(gameName+"-TowerBuilder"+towerID+Utilities.games.get(gameName).getNextTowerID());
+		id = setID(gameName+"-TowerBuilder"+towerID+TDUtils.games.get(gameName).getNextTowerID());
 		//System.out.println(id);
 		this.location = location;
 		this.tower = tower;
@@ -37,16 +36,13 @@ public class TowerBuilder extends IDAble implements Runnable {
 		this.delay = delay;
 		done = false;
 		towerBuilder = this;
-		thread = new Thread(towerBuilder);
-		thread.start();
-		Utilities.idLink.put(id, towerBuilder);
+		executeThread(towerBuilder);
+		TDUtils.idLink.put(id, towerBuilder);
 	}
-
+	
 	public void interrupt() {
-		if(thread.isAlive()) {
-			done = true;
-			thread.interrupt();
-		}
+		cancelThread();
+		done = true;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -79,21 +75,18 @@ public class TowerBuilder extends IDAble implements Runnable {
 				}
 			} else {
 				if(tower.hasStages()) {
-					new Animation(gameName+"-"+towerID+Utilities.games.get(gameName).getNextTowerID(), towerBuilder);
+					new TDAnimation(gameName+"-"+towerID+TDUtils.games.get(gameName).getNextTowerID(), towerBuilder);
 				} else if(tower.getRepeatingFunction()!=null) {
 					try {
-						Thread.sleep(100);
+						Thread.sleep(10);
 					} catch(InterruptedException e) {
 						e.printStackTrace();
 					}
 					TowerFunction tf = tower.getRepeatingFunction();
 					tf.towerPos = location.clone();
 					tf.radius = tower.getRadius();
-					Thread thread = new Thread(tf);
-					tf.repeating = true;
-					thread.start();
-					Utilities.idLink.put(gameName+"-Thread"+thread.getName(), thread);
-					Utilities.idLink.put(gameName+"-TowerFunction"+Utilities.games.get(gameName).getNextTowerID(), tf);
+					tf.start();
+					TDUtils.idLink.put(gameName+"-TowerFunction"+TDUtils.games.get(gameName).getNextTowerID(), tf);
 					System.out.println("Repeating Thread Started");
 				}
 				done = true;

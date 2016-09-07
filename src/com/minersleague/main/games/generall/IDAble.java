@@ -1,4 +1,4 @@
-package com.minersleague.main.games.towerdefense;
+package com.minersleague.main.games.generall;
 
 public class IDAble {
 

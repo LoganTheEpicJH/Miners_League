@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-import com.minersleague.main.games.towerdefense.BlockMetaData;
+import com.minersleague.main.games.generall.BlockMetaData;
 import com.minersleague.main.games.towerdefense.tower.function.BlastiodFurnaceFunction;
 import com.minersleague.main.games.towerdefense.tower.function.TeslaFunction;
 
@@ -145,7 +145,7 @@ public class Towers {
 			blocks.add(new TowerBlock(1, 1, 1, Material.PURPUR_SLAB));
 			blocks.add(new TowerBlock(1, 1, -1, Material.PURPUR_SLAB));
 			blocks.add(new TowerBlock(-1, 1, 1, Material.PURPUR_SLAB));
-			blocks.add(new TowerBlock(-1, 1, 1, Material.PURPUR_SLAB));
+			blocks.add(new TowerBlock(-1, 1, -1, Material.PURPUR_SLAB));
 			//y2
 			blocks.add(new TowerBlock(0, 2, 0, Material.COBBLE_WALL));
 			//Stages
@@ -256,7 +256,7 @@ public class Towers {
 				TowerStage stage_4 = new TowerStage(0, false, replacment, 5000, 2, null, 0);
 				stages.add(stage_4);
 			}
-			dmg = new Tower(blocks, false, null);
+			dmg = new Tower(blocks, true, stages);
 		}
 		
 		//RMG

@@ -45,12 +45,12 @@ public class TowerDefenseInventory {
 		{
 			ItemStack is = new ItemStack(Material.END_CRYSTAL);
 			ItemMeta im = is.getItemMeta();
-			im.setDisplayName(Utilities.color("&c&lReverse Mob Generator"));
+			im.setDisplayName(Utilities.color("&c&lDefensive Mob Generator"));
 			List<String> lore = new ArrayList<String>();
 			lore.add(Utilities.color("&cBuild-Time: &69.5 Seconds"));
 			lore.add(Utilities.color("&cType: &6Infection-Damge"));
 			lore.add(Utilities.color("&cRange: &63.5 Blocks"));
-			lore.add(Utilities.color("&cTowerSpawnID: &6rmg"));
+			lore.add(Utilities.color("&cTowerSpawnID: &6dmg"));
 			im.setLore(lore);
 			is.setItemMeta(im);
 			inv.setItem(14, is);
