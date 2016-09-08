@@ -1,17 +1,17 @@
 package com.minersleague.main.games.towerdefense.tower.function;
 
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Zombie;
 
-public class BlastiodFurnaceFunction extends TowerFunction {
+public class BlastiodFurnaceFunction {
 	
 	BlastiodFurnaceFunction bff;
-
-	@Override
-	public void run() {}
-
-	@Override
+	public Location towerPos;
+	public boolean repeating;
+	public double radius;
+	
 	public void start() {
 		towerPos.add(0, 2.5, 0);
 		towerPos.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, towerPos, 10);
@@ -23,5 +23,12 @@ public class BlastiodFurnaceFunction extends TowerFunction {
 			}
 		}
 	}
+	
+	public void init(Location location, double radius) {
+		this.towerPos = location;
+		this.radius = radius;
+	}
+	
+	public void stop() {}
 
 }

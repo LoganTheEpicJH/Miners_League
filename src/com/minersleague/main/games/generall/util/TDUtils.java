@@ -8,9 +8,7 @@ import com.minersleague.main.games.towerdefense.TowerDefenseHub;
 import com.minersleague.main.games.towerdefense.mechanics.TDAnimation;
 import com.minersleague.main.games.towerdefense.mechanics.TDAnimator;
 import com.minersleague.main.games.towerdefense.mechanics.TDGameRunner;
-import com.minersleague.main.games.towerdefense.tower.TowerBreaker;
 import com.minersleague.main.games.towerdefense.tower.TowerBuilder;
-import com.minersleague.main.games.towerdefense.tower.function.TowerFunction;
 
 public class TDUtils {
 	
@@ -45,13 +43,8 @@ public class TDUtils {
 					Thread thread = (Thread)idLinkObj;
 					thread.interrupt();
 				}
-				if(id.contains("TowerFunction")) {
-					TowerFunction tf = (TowerFunction)idLinkObj;
-					tf.repeating = false;
-				}
 				if(id.contains("TowerBuilder")) {
 					TowerBuilder tb = (TowerBuilder)idLinkObj;
-					new TowerBreaker(tb.location);
 					tb.interrupt();
 				}
 			}

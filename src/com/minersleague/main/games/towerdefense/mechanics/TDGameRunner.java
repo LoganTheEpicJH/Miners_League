@@ -2,7 +2,7 @@ package com.minersleague.main.games.towerdefense.mechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.Zombie;
+import org.bukkit.scoreboard.Scoreboard;
 import org.spigotmc.AsyncCatcher;
 
 import com.minersleague.main.games.generall.PlayerStorage;
@@ -28,9 +29,15 @@ public class TDGameRunner extends SimpleThread {
 	public TDGame game;
 	private TDGameRunner gs;
 	public TDCountdown c;
-	private TDRounds round;
+	public TDRounds round;
 	private LivingEntity lentity;
 	public String id;
+	@SuppressWarnings("unused")
+	private Scoreboard scoreboard;
+	public int dead;
+	public int zombiesPassed;
+	public boolean lost;
+	public boolean won;
 
 	public TDGameRunner(TDGame game) {
 		AsyncCatcher.enabled = false;
@@ -39,6 +46,10 @@ public class TDGameRunner extends SimpleThread {
 		this.game = game;
 		allowed = false;
 		running = true;
+		dead = 0;
+		zombiesPassed = 0;
+		lost = false;
+		won = false;
 		TDUtils.idLink.put(id, gs);
 		startCountdown();
 	}
@@ -54,9 +65,15 @@ public class TDGameRunner extends SimpleThread {
 		c = new TDCountdown(gs, 31);
 	}
 
+	public void setupScoreboard() {
+		scoreboard = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
+		//Objective obj = 
+	}
+	
 	public void startGame() {
 		initGameStart();
-		round = new TDRounds();
+		System.out.println("Game Started");
+		round = new TDRounds(gs);
 		for(Entity entity : game.getEnd().getWorld().getNearbyEntities(game.getEnd(), 2d, 2d, 2d)) {
 			if(entity instanceof Villager) {
 				Villager v = (Villager)entity;
@@ -98,10 +115,10 @@ public class TDGameRunner extends SimpleThread {
 		running = false;
 		for(String s : TDUtils.gameIn.keySet()) {
 			if(TDUtils.gameIn.get(s)!=null) {
-				if(TDUtils.gameIn.get(s).equals(game.getName())) {
+				if(TDUtils.gameIn.get(s).getGameName().equals(game.getName())) {
+					Bukkit.getServer().getPlayer(s).teleport(game.getLobby());
 					TDUtils.gameIn.put(s, null);
 					TDUtils.gameIn.put(s, new PlayerStorage(game.getName(), PlayingStage.IN_LOBBY));
-					Bukkit.getServer().getPlayer(s).teleport(game.getLobby());
 				}
 			}
 		}
@@ -115,6 +132,7 @@ public class TDGameRunner extends SimpleThread {
 		for(String up : game.getPlayersPlaying()) {
 			TDUtils.gameIn.put(up, null);
 		}
+		TDUtils.stopAllGameActions(game);
 		cancelThread();
 	}
 
@@ -123,24 +141,26 @@ public class TDGameRunner extends SimpleThread {
 	public void run() {
 		while(running) {
 			if(allowed) {
-				if(game.getZombiesKilled()>=round.zombiesForRound) {
+				//System.out.println(dead+" = "+round.zombiesForRound);
+				if(dead==round.zombiesForRound) {
+					System.out.println("Next Round Started");
+					dead = 0;
 					round.nextRound(game, lentity);
 					try {
 						Thread.sleep(1000);
 					} catch(InterruptedException e) {}
 				}
-				for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(new Location(game.getEnd().getWorld(), game.getEnd().getX(), game.getEnd().getBlockY()+2, game.getEnd().getZ()), 2d, 3d, 2d)) {
+				for(Entity entity : game.getPlayground().getWorld().getNearbyEntities(game.getEnd(), 2d, 4d, 2d)) {
 					if(entity instanceof Zombie) {
 						Zombie zombie = (Zombie)entity;
-						// System.out.println("Found Zombie zx: "+zombie.getLocation().getBlockX()+" zz: "+zombie.getLocation().getBlockY()+" | End x: "+game.getEnd().getBlockX()+" z: "+game.getEnd().getBlockZ());
+						//System.out.println("Found Zombie");
 						if(zombie.getLocation().getBlockX()==game.getEnd().getBlockX()&&zombie.getLocation().getBlockZ()==game.getEnd().getBlockZ()) {
-							// System.out.println("Found Zombie");
 							zombie.setHealth(0.0D);
-							game.zombiePassed();
-							if(game.lost) {
+							zombiePassed();
+							if(lost) {
 								TDUtils.stopAllGameActions(game);
 							}
-							if(game.won) {
+							if(won) {
 								TDUtils.stopAllGameActions(game);
 								for(String s : TDUtils.gameIn.keySet()) {
 									if(TDUtils.gameIn.get(s).getGameName().equals(game.getName())) {
@@ -153,7 +173,9 @@ public class TDGameRunner extends SimpleThread {
 					}
 				}
 				for(AdvZombie zombie : round.getZombies()) {
-					zombie.getSpawn().setTarget(lentity);
+					if(zombie.getSpawn().getTarget()!=lentity) {
+						zombie.getSpawn().setTarget(lentity);
+					}
 				}
 			}
 			try {
@@ -161,5 +183,21 @@ public class TDGameRunner extends SimpleThread {
 			} catch(InterruptedException e) {}
 		}
 	}
-
+	
+	@SuppressWarnings("deprecation")
+	public void zombiePassed() {
+		zombiesPassed++;
+		for(String s : game.joined) {
+			Player p = Bukkit.getServer().getPlayer(s);
+			if(zombiesPassed==3) {
+				p.sendTitle(Utilities.color("&cGAME OVER"), Utilities.color("&aYou lost all Lifes"));
+				p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 1, 0);
+				lost = true;
+			} else {
+				p.sendTitle(Utilities.color("&cA Zombie reached the END!"), Utilities.color("&aYou lost a life &4♥"));
+				p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_HURT, 1, 0);
+			}
+		}
+	}
+	
 }

@@ -59,6 +59,16 @@ public class Statistics {
 		return Groups.groups.get(getData().getString("Bukkit.Players."+player+".rank"));
 	}
  	
+	public static int getPlayerCoins(String player) {
+		return getData().getInt("Bukkit.Players."+player+".coins");
+	}
+	
+	public static void setPlayerCoins(String player, int coins) {
+		getData().set("Bukkit.Players."+player+".coins", coins);
+		saveData();
+		reloadData();
+	}
+	
 	public static void reloadData() {
 		stats = YamlConfiguration.loadConfiguration(sfile);
 	}

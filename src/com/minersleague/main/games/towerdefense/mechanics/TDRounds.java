@@ -15,11 +15,14 @@ public class TDRounds {
 	boolean done;
 	Thread thread;
 	public int zombiesForRound;
+	public int zombiesForRoundSpawn;
+	public TDGameRunner gs;
 
-	public TDRounds() {
+	public TDRounds(TDGameRunner gs) {
 		zombies = new ArrayList<AdvZombie>();
 		roundAt = 0;
 		done = false;
+		this.gs = gs;
 	}
 
 	public void nextRound(TDGame game, LivingEntity lentity) {
@@ -27,19 +30,22 @@ public class TDRounds {
 		if(!(roundAt>maxRound)) {
 			done = false;
 			zombiesForRound = 10*(int)Math.floor(1.3)*roundAt;
+			zombiesForRoundSpawn = zombiesForRound;
 			System.out.println(zombiesForRound);
 			thread = new Thread(new Runnable() {
 				@Override
 				public void run() {
 					while(!done) {
-						if(zombiesForRound==0) {
+						if(zombiesForRoundSpawn==0) {
 							done = true;
-							thread.interrupt();
+							if(thread.isAlive()) {
+								thread.interrupt();
+							}
 							break;
 						} else {
-							zombiesForRound--;
+							zombiesForRoundSpawn--;
 							AdvZombie adv = new AdvZombie("Z-"+game.getName(), game.getStart());
-							adv.getSpawn().setTarget(lentity);
+							//adv.getSpawn().setTarget(lentity);
 							zombies.add(adv);
 						}
 						try {
@@ -49,8 +55,6 @@ public class TDRounds {
 				}
 			});
 			thread.start();
-		} else {
-			game.won = true;
 		}
 	}
 

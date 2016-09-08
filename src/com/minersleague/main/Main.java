@@ -12,6 +12,7 @@ import com.minersleague.main.commands.CMD_GameTowerDefense;
 import com.minersleague.main.commands.CMD_Rename;
 import com.minersleague.main.commands.CMD_Test;
 import com.minersleague.main.commands.MinersLeagueCommand;
+import com.minersleague.main.config.Statistics;
 import com.minersleague.main.games.generall.util.CODUtils;
 import com.minersleague.main.games.generall.util.TDUtils;
 import com.minersleague.main.games.towerdefense.mechanics.TowerDefenseEventHandler;
@@ -25,6 +26,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
+		Statistics.setup(plugin);
 		AsyncCatcher.enabled = false;
 		Groups.init();
 		Towers.loadTowners();

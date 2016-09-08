@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minersleague.main.games.generall.PlayingStage;
 import com.minersleague.main.games.generall.util.TDUtils;
-import com.minersleague.main.games.towerdefense.TDGame;
 import com.minersleague.main.games.towerdefense.TowerDefenseInventory;
 import com.minersleague.main.games.towerdefense.tower.Tower;
 import com.minersleague.main.games.towerdefense.tower.Towers;
@@ -26,9 +25,9 @@ public class TowerDefenseEventHandler implements Listener {
 		if(e.getEntity() instanceof Zombie) {
 			Zombie zombie = (Zombie)e.getEntity();
 			if(zombie.getCustomName()!=null) {
-				TDGame game = TDUtils.games.get(zombie.getCustomName().split("-")[1]);
+				TDGameRunner game = (TDGameRunner)TDUtils.idLink.get(zombie.getCustomName().split("-")[1]+"-GameStarter");
 				if(game!=null) {
-					game.zombieKilled();
+					game.dead++;
 					e.setDroppedExp(0);
 					e.getDrops().clear();
 				}

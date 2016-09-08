@@ -7,7 +7,6 @@ import com.minersleague.main.games.generall.BlockMetaData;
 import com.minersleague.main.games.generall.SimpleThread;
 import com.minersleague.main.games.generall.util.TDUtils;
 import com.minersleague.main.games.towerdefense.mechanics.TDAnimation;
-import com.minersleague.main.games.towerdefense.tower.function.TowerFunction;
 
 public class TowerBuilder extends SimpleThread {
 
@@ -41,6 +40,7 @@ public class TowerBuilder extends SimpleThread {
 	}
 	
 	public void interrupt() {
+		new TowerBreaker(location.clone());
 		cancelThread();
 		done = true;
 	}
@@ -76,19 +76,18 @@ public class TowerBuilder extends SimpleThread {
 			} else {
 				if(tower.hasStages()) {
 					new TDAnimation(gameName+"-"+towerID+TDUtils.games.get(gameName).getNextTowerID(), towerBuilder);
-				} else if(tower.getRepeatingFunction()!=null) {
+				} /*else if(tower.getRepeatingFunction()!=null) {
 					try {
 						Thread.sleep(10);
 					} catch(InterruptedException e) {
 						e.printStackTrace();
 					}
 					TowerFunction tf = tower.getRepeatingFunction();
-					tf.towerPos = location.clone();
-					tf.radius = tower.getRadius();
+					tf.init(location.clone(), tower.getRadius());
 					tf.start();
 					TDUtils.idLink.put(gameName+"-TowerFunction"+TDUtils.games.get(gameName).getNextTowerID(), tf);
 					System.out.println("Repeating Thread Started");
-				}
+				}*/
 				done = true;
 				// System.out.println("Interruption 2 | Done");
 			}

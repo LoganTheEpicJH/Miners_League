@@ -9,7 +9,7 @@ import com.minersleague.main.games.generall.PlayingStage;
 import com.minersleague.main.games.generall.util.CODUtils;
 
 public class CODEventHandler implements Listener {
-
+	
 	@EventHandler
 	public void onGunShoot(PlayerInteractEvent e) {
 		if(CODUtils.gameIn.get(e.getPlayer().getName())!=null) {

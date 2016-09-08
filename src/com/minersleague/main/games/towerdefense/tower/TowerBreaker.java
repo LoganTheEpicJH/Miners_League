@@ -4,24 +4,74 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 
-public class TowerBreaker {
+import com.minersleague.main.games.generall.SimpleThread;
+
+public class TowerBreaker extends SimpleThread {
+
+	int levelAt;
+	int maxLevel = 7;
+	boolean running;
+	Location location;
+	TowerBreaker tb;
 
 	public TowerBreaker(Location location) {
-		int x = location.getBlockX();
-		int y = location.getBlockY();
-		int z = location.getBlockY();
-		World w = location.getWorld();
-		for(int i = 0; i<7; i++) {
-			w.getBlockAt(x, y+i, z).setType(Material.AIR);
-			w.getBlockAt(x-1, y+i, z+1).setType(Material.AIR);
-			w.getBlockAt(x, y+i, z+1).setType(Material.AIR);
-			w.getBlockAt(x+1, y+i, z+1).setType(Material.AIR);
-			w.getBlockAt(x+1, y+i, z).setType(Material.AIR);
-			w.getBlockAt(x+1, y+i, z-1).setType(Material.AIR);
-			w.getBlockAt(x, y+i, z-1).setType(Material.AIR);
-			w.getBlockAt(x-1, y+i, z-1).setType(Material.AIR);
-			w.getBlockAt(x-1, y+i, z).setType(Material.AIR);
+		this.location = location;
+		levelAt = 0;
+		running = true;
+		tb = this;
+		executeThread(tb);
+	}
+
+	@Override
+	public void run() {
+		while(running) {
+			levelAt++;
+			if(levelAt<=maxLevel) {
+				int x = location.getBlockX();
+				int y = location.getBlockY()+levelAt;
+				int z = location.getBlockY();
+				World w = location.getWorld();
+				w.getBlockAt(x, y, z).setType(Material.AIR);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e) {}
+				w.getBlockAt(x-1, y, z+1).setType(Material.AIR);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e) {}
+				w.getBlockAt(x, y, z+1).setType(Material.AIR);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e) {}
+				w.getBlockAt(x+1, y, z+1).setType(Material.AIR);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e) {}
+				w.getBlockAt(x+1, y, z).setType(Material.AIR);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e) {}
+				w.getBlockAt(x+1, y, z-1).setType(Material.AIR);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e) {}
+				w.getBlockAt(x, y, z-1).setType(Material.AIR);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e) {}
+				w.getBlockAt(x-1, y, z-1).setType(Material.AIR);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e) {}
+				w.getBlockAt(x-1, y, z).setType(Material.AIR);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e) {}
+			} else {
+				running = false;
+				cancelThread();
+			}
 		}
 	}
-	
+
 }

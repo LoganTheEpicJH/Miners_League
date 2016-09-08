@@ -22,9 +22,7 @@ import com.minersleague.main.games.towerdefense.TowerDefenseInventory;
 import com.minersleague.main.games.towerdefense.mechanics.TDAnimation;
 import com.minersleague.main.games.towerdefense.mechanics.TDAnimator;
 import com.minersleague.main.games.towerdefense.mechanics.TDGameRunner;
-import com.minersleague.main.games.towerdefense.tower.TowerBreaker;
 import com.minersleague.main.games.towerdefense.tower.TowerBuilder;
-import com.minersleague.main.games.towerdefense.tower.function.TowerFunction;
 import com.minersleague.main.util.Utilities;
 
 public class CMD_GameTowerDefense extends MinersLeagueCommand {
@@ -117,16 +115,8 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 									}
 									thread.interrupt();
 								}
-								if(id.contains("TowerFunction")) {
-									TowerFunction tf = (TowerFunction)idLinkObj;
-									if(tf.repeating) {
-										active_animators++;
-									}
-									tf.repeating = false;
-								}
 								if(id.contains("TowerBuilder")) {
 									TowerBuilder tb = (TowerBuilder)idLinkObj;
-									new TowerBreaker(tb.location);
 									tb.interrupt();
 									messagePlayer(p, "&cYou Stopped "+"&bTowerBuilder: "+id);
 								}
@@ -209,13 +199,9 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("create")) {
-					if(!TDUtils.games.keySet().contains(name)) {
-						TDUtils.games.put(name, new TDGame(name, null, null, null, null, new ArrayList<String>()));
-						messagePlayer(p, "&cCreated Game "+name);
-						return true;
-					} else {
-						msg = "Already Exists";
-					}
+					TDUtils.games.put(name, new TDGame(name, null, null, null, null, new ArrayList<String>()));
+					messagePlayer(p, "&cCreated Game "+name);
+					return true;
 				}
 			}
 			if(args.length==3) {
@@ -251,16 +237,8 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 									}
 									thread.interrupt();
 								}
-								if(id.contains("TowerFunction")) {
-									TowerFunction tf = (TowerFunction)idLinkObj;
-									if(tf.repeating) {
-										active_animators++;
-									}
-									tf.repeating = false;
-								}
 								if(id.contains("TowerBuilder")) {
 									TowerBuilder tb = (TowerBuilder)idLinkObj;
-									new TowerBreaker(tb.location);
 									tb.interrupt();
 									messagePlayer(p, "&cYou stopped "+"&bTowerBuilder: "+id);
 								}

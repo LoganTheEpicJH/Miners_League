@@ -1,11 +1,17 @@
 package com.minersleague.main.games.towerdefense.tower.function;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Zombie;
 
-public class TeslaFunction extends TowerFunction {
+import com.minersleague.main.games.generall.SimpleThread;
+
+public class TeslaFunction extends SimpleThread {
 
 	boolean found;
+	public Location towerPos;
+	public boolean repeating;
+	public double radius;
 	
 	@Override
 	public void run() {
@@ -35,11 +41,20 @@ public class TeslaFunction extends TowerFunction {
 			}
 		}
 	}
-
-	@Override
+	
 	public void start() {
-		repeating = true;
 		executeThread(this);
+	}
+	
+	public void init(Location location, double radius) {
+		this.towerPos = location;
+		this.radius = radius;
+		repeating = true;
+	}
+	
+	public void stop() {
+		repeating = false;
+		cancelThread();
 	}
 
 }

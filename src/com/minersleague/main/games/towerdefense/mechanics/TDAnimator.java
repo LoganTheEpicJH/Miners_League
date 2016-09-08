@@ -65,11 +65,10 @@ public class TDAnimator extends SimpleThread {
 						Thread.sleep(stage.delay);
 					} catch(InterruptedException e) {}
 				} else {
-					if(stage.finalStage) {
-						stage.tf.towerPos = towerPos.clone();
-						stage.tf.radius = stage.radius;
+					/*if(stage.finalStage) {
+						stage.tf.init(towerPos.clone(), stage.radius);
 						stage.tf.start();
-					}
+					}*/
 					done = true;
 				}
 			}
