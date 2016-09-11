@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.Zombie;
-import org.bukkit.scoreboard.Scoreboard;
 import org.spigotmc.AsyncCatcher;
 
 import com.minersleague.main.games.generall.PlayerStorage;
@@ -32,8 +31,6 @@ public class TDGameRunner extends SimpleThread {
 	public TDRounds round;
 	private LivingEntity lentity;
 	public String id;
-	@SuppressWarnings("unused")
-	private Scoreboard scoreboard;
 	public int dead;
 	public int zombiesPassed;
 	public boolean lost;
@@ -53,8 +50,10 @@ public class TDGameRunner extends SimpleThread {
 		TDUtils.idLink.put(id, gs);
 		startCountdown();
 	}
-
+	
 	public void startCountdown() {
+		TDLobby tdl = new TDLobby(game);
+		do {} while(!tdl.done);
 		for(Player p : Bukkit.getServer().getOnlinePlayers()) {
 			if(game.getPlayersPlaying().contains(p.getName())) {
 				p.teleport(game.getPlayground());
@@ -63,11 +62,6 @@ public class TDGameRunner extends SimpleThread {
 			}
 		}
 		c = new TDCountdown(gs, 31);
-	}
-
-	public void setupScoreboard() {
-		scoreboard = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
-		//Objective obj = 
 	}
 	
 	public void startGame() {

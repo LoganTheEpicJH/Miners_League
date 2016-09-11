@@ -40,7 +40,11 @@ public class TowerBuilder extends SimpleThread {
 	}
 	
 	public void interrupt() {
-		new TowerBreaker(location.clone());
+		try {
+			Class.forName("com.minersleague.main.games.towerdefense.tower.TowerBreaker").getConstructor(new Class[]{Tower.class, Location.class}).newInstance(new Object[]{tower, location});
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		cancelThread();
 		done = true;
 	}

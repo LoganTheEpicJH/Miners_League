@@ -5,6 +5,10 @@ public abstract class SimpleThread extends IDAble implements Runnable {
 	private Thread thread;
 	public boolean running;
 	
+	public boolean isAlive() {
+		return thread.isAlive();
+	}
+	
 	public void executeThread(Runnable runnable) {
 		thread = new Thread(runnable);
 		running = true;

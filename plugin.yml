@@ -10,6 +10,9 @@ commands:
     description: All Commands for the TowerDefense Minigame
     usage: /game <param> <param>
     aliases: [mltowerdefense, miner_towerdefense, mltd, td]
+  cod:
+    description: All COD Commands
+    aliases: [mlcod, miner_cod]
   announce:
     description: Sends an announcement.
     usage: /announce <Message>

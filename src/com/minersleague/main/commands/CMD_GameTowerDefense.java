@@ -23,7 +23,6 @@ import com.minersleague.main.games.towerdefense.mechanics.TDAnimation;
 import com.minersleague.main.games.towerdefense.mechanics.TDAnimator;
 import com.minersleague.main.games.towerdefense.mechanics.TDGameRunner;
 import com.minersleague.main.games.towerdefense.tower.TowerBuilder;
-import com.minersleague.main.util.Utilities;
 
 public class CMD_GameTowerDefense extends MinersLeagueCommand {
 
@@ -300,10 +299,6 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 		}
 		messagePlayer(p, "&cError: "+msg);
 		return true;
-	}
-
-	public static void messagePlayer(Player p, String msg) {
-		p.sendMessage(Utilities.color(msg));
 	}
 
 }

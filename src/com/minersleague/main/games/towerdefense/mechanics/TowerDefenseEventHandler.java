@@ -1,5 +1,7 @@
 package com.minersleague.main.games.towerdefense.mechanics;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
@@ -66,13 +68,26 @@ public class TowerDefenseEventHandler implements Listener {
 								}
 							}
 							String spawnID = searchedLore.replace(Utilities.color("&cTowerSpawnID: &6"), "");
-							// System.out.println(Utilities.color(spawnID));
 							Tower tower = Towers.towers.get(spawnID);
 							String prefix = null;
 							if(TDUtils.gameIn.get(p.getName())!=null) {
-								prefix = TDUtils.gameIn.get(p.getName()).getGameName();
-								Towers.buildTowner(prefix, spawnID, 500, tower, p.getLocation());
-								p.sendMessage(Utilities.color("&cTower "+spawnID+" is being created. Thread-Prefix: "+prefix));
+								Location placing = p.getLocation().clone();
+								for(int i = 0; i<100; i++) {
+									placing.subtract(0, i, 0);
+									System.out.println(placing.getBlockY());
+									if(placing.getBlock().getType()==Material.NETHERRACK) {
+										placing.add(0, 1, 0);
+										if(TDUtils.checkSurroundingForTower(placing, tower)) {
+											prefix = TDUtils.gameIn.get(p.getName()).getGameName();
+											Towers.buildTowner(prefix, spawnID, 500, tower, placing);
+											p.sendMessage(Utilities.color("&cTower "+spawnID+" is being created. Thread-Prefix: "+prefix));
+										} else {
+											p.closeInventory();
+											p.sendMessage(Utilities.color("&cA Tower is in the Way!"));
+										}
+										break;
+									}
+								}
 							}
 						}
 					}

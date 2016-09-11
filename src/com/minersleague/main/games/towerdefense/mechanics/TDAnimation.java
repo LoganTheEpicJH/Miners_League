@@ -30,9 +30,6 @@ public class TDAnimation extends SimpleThread {
 	public void stop() {
 		animate = false;
 		cancelThread();
-		//if(thread.isAlive()&&thread!=null) {
-			//thread.interrupt();
-		//}
 		if(animator!=null) {
 			animator.done = true;
 		}
@@ -44,10 +41,7 @@ public class TDAnimation extends SimpleThread {
 		}
 		TowerStage stage = towerBuilder.tower.getTowerStages().get(done);
 		if(stage!=null) {
-			//Location loc = new Location(towerBuilder.location.getWorld(), towerBuilder.location.getBlockX(), towerBuilder.location.getBlockY()+2.5, towerBuilder.location.getBlockZ()); //towerBuilder.location;
 			animator = new TDAnimator(gameName, stage, towerBuilder.location);
-			//thread = new Thread(animator);
-			//thread.start();
 			done++;
 		}
 	}

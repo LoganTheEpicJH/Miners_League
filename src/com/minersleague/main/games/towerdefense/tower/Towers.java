@@ -119,7 +119,7 @@ public class Towers {
 			blocks.add(new TowerBlock(0, 1, 0, Material.COBBLE_WALL));
 			blocks.add(new TowerBlock(0, 2, 0, Material.FENCE));
 			blocks.add(new TowerBlock(0, 3, 0, Material.END_ROD, new BlockMetaData[]{BlockMetaData.END_ROD_DOWN}));
-			lpt = new Tower(blocks, false, null);
+			lpt = new Tower(blocks);
 		}
 		
 		//DMG
@@ -409,7 +409,7 @@ public class Towers {
 			blocks.add(new TowerBlock(-1, 0, 1, Material.IRON_BLOCK));
 			//y1
 			blocks.add(new TowerBlock(0, 1, 0, Material.BEACON));
-			boostBeacon = new Tower(blocks, false, null);
+			boostBeacon = new Tower(blocks);
 		}
 		
 		//CreditBank
@@ -431,7 +431,7 @@ public class Towers {
 			blocks.add(new TowerBlock(1, 1, 0, Material.COBBLE_WALL));
 			blocks.add(new TowerBlock(0, 1, -1, Material.COBBLE_WALL));
 			blocks.add(new TowerBlock(-1, 1, 0, Material.COBBLE_WALL));
-			creditBank = new Tower(blocks, false, null);
+			creditBank = new Tower(blocks);
 		}
 		
 		//HPT
@@ -463,7 +463,7 @@ public class Towers {
 			blocks.add(new TowerBlock(0, 3, 0, Material.FENCE));
 			//y4
 			blocks.add(new TowerBlock(0, 4, 0, Material.END_ROD, new BlockMetaData[]{BlockMetaData.END_ROD_DOWN}));
-			hpt = new Tower(blocks, false, null);
+			hpt = new Tower(blocks);
 		}
 		
 		//EPS
@@ -506,7 +506,7 @@ public class Towers {
 			blocks.add(new TowerBlock(1, 4, 0, Material.SMOOTH_STAIRS));
 			blocks.add(new TowerBlock(0, 4, -1, Material.SMOOTH_STAIRS, new BlockMetaData[]{BlockMetaData.BYTE_3}));
 			blocks.add(new TowerBlock(-1, 4, 0, Material.SMOOTH_STAIRS, new BlockMetaData[]{BlockMetaData.BYTE_2}));
-			eps = new Tower(blocks, false, null);
+			eps = new Tower(blocks);
 		}
 		
 		towers.put("blastiod", blastiodFurnace);

@@ -48,6 +48,11 @@ public abstract class MinersLeagueCommand implements CommandExecutor {
 		return null;
 	}
 	
+
+	public static void messagePlayer(Player p, String msg) {
+		p.sendMessage(Utilities.color(msg));
+	}
+	
 	public String getName() {
 		return name;
 	}
