@@ -23,7 +23,6 @@ import org.bukkit.potion.PotionEffectType;
 import com.minersleague.main.Main;
 import com.minersleague.main.games.generall.PlayingStage;
 import com.minersleague.main.games.generall.util.CODUtils;
-import com.minersleague.main.games.generall.util.TDUtils;
 import com.minersleague.main.util.ActionbarMessage;
 import com.minersleague.main.util.Utilities;
 
@@ -71,16 +70,16 @@ public class CODEventHandler implements Listener {
 								if(!teamDamaged.equals(teamShooter)&&!teamDamaged.equals("FFA")) {
 									shooter.playSound(shooter.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 0);
 									damaged.setLevel(damaged.getLevel()-ball.getMetadata(GunMetaData.GUN_DAMAGE.key).get(0).asInt());
-									if(TDUtils.assist.get(damaged.getName())!=null) {
-										TDUtils.assist.put(damaged.getName(), new HashMap<String, Integer>());
-										TDUtils.assist.get(damaged.getName()).put(shooter.getName(), ball.getMetadata(GunMetaData.GUN_DAMAGE.key).get(0).asInt());
+									if(CODUtils.assist.get(damaged.getName())!=null) {
+										CODUtils.assist.put(damaged.getName(), new HashMap<String, Integer>());
+										CODUtils.assist.get(damaged.getName()).put(shooter.getName(), ball.getMetadata(GunMetaData.GUN_DAMAGE.key).get(0).asInt());
 									} else {
-										TDUtils.assist.get(damaged.getName()).put(shooter.getName(), ball.getMetadata(GunMetaData.GUN_DAMAGE.key).get(0).asInt());
+										CODUtils.assist.get(damaged.getName()).put(shooter.getName(), ball.getMetadata(GunMetaData.GUN_DAMAGE.key).get(0).asInt());
 									}
 									shooter.setMetadata("ml_coins", new FixedMetadataValue(Main.plugin, shooter.getMetadata("ml_coins").get(0).asInt()+1));
 									if(damaged.getLevel()<=0) {
-										for(String s : TDUtils.assist.get(damaged.getName()).keySet()) {
-											if(TDUtils.assist.get(damaged.getName()).get(s)>=28&&!s.equals(shooter.getName())) {
+										for(String s : CODUtils.assist.get(damaged.getName()).keySet()) {
+											if(CODUtils.assist.get(damaged.getName()).get(s)>=28&&!s.equals(shooter.getName())) {
 												Bukkit.getServer().getPlayer(s).setMetadata("ml_coins", new FixedMetadataValue(Main.plugin, Bukkit.getServer().getPlayer(s).getMetadata("ml_coins").get(0).asInt()+2));
 												ActionbarMessage.showMessage(Bukkit.getServer().getPlayer(s), Utilities.color("&1&lYOU &r&fassisted to kill &c&l"+damaged.getName()));
 											}

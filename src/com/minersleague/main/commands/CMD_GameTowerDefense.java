@@ -73,6 +73,7 @@ public class CMD_GameTowerDefense extends MinersLeagueCommand {
 					}
 				}
 				if(args[0].equalsIgnoreCase("build")) {
+					TDUtils.gameIn.put(p.getName(), new PlayerStorage("game", PlayingStage.NONE));
 					p.openInventory(TowerDefenseInventory.getTowerDefenseInv());
 					return true;
 				}

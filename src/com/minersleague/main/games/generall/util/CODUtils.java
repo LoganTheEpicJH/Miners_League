@@ -14,10 +14,12 @@ public class CODUtils {
 	
 	public static HashMap<String, CODStorage> gameIn;
 	public static HashMap<String, Area> areas;
+	public static HashMap<String, HashMap<String, Integer>> assist;
 	
 	public CODUtils() {
 		gameIn = new HashMap<String, CODStorage>();
 		areas = new HashMap<String, Area>();
+		assist = new HashMap<String, HashMap<String, Integer>>();
 	}
 	
 	public static String getTeamPlayerIsIn(Player p) {

@@ -3,7 +3,6 @@ package com.minersleague.main.games.towerdefense.mechanics;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import com.minersleague.main.games.generall.BlockMetaData;
 import com.minersleague.main.games.generall.SimpleThread;
 import com.minersleague.main.games.generall.util.TDUtils;
 import com.minersleague.main.games.towerdefense.tower.TowerBlock;
@@ -36,7 +35,7 @@ public class TDAnimator extends SimpleThread {
 		cancelThread();
 		done = true;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
@@ -49,15 +48,10 @@ public class TDAnimator extends SimpleThread {
 			} else {
 				if(blockAt<=stage.blocksToPlace.size()-1) {
 					TowerBlock tb = stage.blocksToPlace.get(blockAt);
-					Block block = towerPos.getWorld().getBlockAt(towerPos.getBlockX()+tb.x, towerPos.getBlockY()+tb.y, towerPos.getBlockZ()+tb.z); 
-					block.setType(tb.getMaterial());
-					if(tb.getMetaData()!=null) {
-						for(BlockMetaData meta : tb.getMetaData()) {
-							block.setData((byte)meta.getMeta(), true);
-							block.getState().update();
-						}
-					} else if(tb.getSpecialData()>0) {
-						block.setData((byte)tb.getSpecialData(), true);
+					Block block = towerPos.getWorld().getBlockAt(towerPos.getBlockX()+tb.x, towerPos.getBlockY()+tb.y, towerPos.getBlockZ()+tb.z);
+					block.setType(tb.getBlock().getMaterial());
+					if(tb.getBlock().getBlockMetaData()>0) {
+						block.setData((byte)tb.getBlock().getBlockMetaData(), true);
 						block.getState().update();
 					}
 					blockAt++;

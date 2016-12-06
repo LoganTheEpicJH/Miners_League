@@ -18,6 +18,13 @@ public class Tower {
 		this.repeatingFunction = false;
 	}
 	
+	public Tower(ArrayList<TowerBlock> blocks, TowerFunction towerFunction) {
+		this.blocks = blocks;
+		this.towerFunction = towerFunction;
+		this.hasStages = false;
+		this.repeatingFunction = true;
+	}
+	
 	public Tower(ArrayList<TowerBlock> blocks, boolean hasStages, ArrayList<TowerStage> stages) {
 		this.blocks = blocks;
 		this.hasStages = hasStages;
@@ -40,6 +47,10 @@ public class Tower {
 	
 	public boolean hasRepeatingFunction() {
 		return repeatingFunction;
+	}
+	
+	public TowerFunction getTowerFunction() {
+		return towerFunction;
 	}
 	
 	public ArrayList<TowerBlock> getBlocks() {

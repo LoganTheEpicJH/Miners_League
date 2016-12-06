@@ -3,7 +3,6 @@ package com.minersleague.main.games.towerdefense.tower;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import com.minersleague.main.games.generall.BlockMetaData;
 import com.minersleague.main.games.generall.SimpleThread;
 import com.minersleague.main.games.generall.util.TDUtils;
 import com.minersleague.main.games.towerdefense.mechanics.TDAnimation;
@@ -58,15 +57,10 @@ public class TowerBuilder extends SimpleThread {
 				if(tower.getBlocks().get(at)!=null) {
 					TowerBlock block = tower.getBlocks().get(at);
 					Block worldBlock = location.getWorld().getBlockAt(x+block.x, y+block.y, z+block.z);
-					worldBlock.setType(block.getMaterial());
-					if(block.getMetaData()!=null) {
-						for(BlockMetaData meta : block.getMetaData()) {
-							worldBlock.setData((byte)meta.getMeta(), true);
+					worldBlock.setType(block.getBlock().getMaterial());
+					if(block.getBlock().getBlockMetaData()>0) {
+							worldBlock.setData((byte)block.getBlock().getBlockMetaData(), true);
 							worldBlock.getState().update();
-						}
-					} else if(block.getSpecialData()>0) {
-						worldBlock.setData((byte)block.getSpecialData(), true);
-						worldBlock.getState().update();
 					}
 					done = false;
 					at++;

@@ -12,12 +12,14 @@ public class TDCountdown extends SimpleThread {
 	public boolean done;
 	private TDGameRunner gs;
 	private int countdown;
+	private TDCountdown tdc;
 	
 	public TDCountdown(TDGameRunner gs, int countdown) {
+		tdc = this;
 		done = false;
 		this.gs = gs;
 		this.countdown = countdown;
-		executeThread(this);
+		executeThread(tdc);
 	}
 
 	@SuppressWarnings("deprecation")

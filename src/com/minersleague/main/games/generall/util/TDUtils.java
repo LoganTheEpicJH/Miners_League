@@ -28,14 +28,12 @@ public class TDUtils {
 	public static HashMap<String, TDGame> games;
 	public static HashMap<String, PlayerStorage> gameIn;
 	public static HashMap<String, Object> idLink;
-	public static HashMap<String, HashMap<String, Integer>> assist;
 	public static TowerDefenseHub hub;
 
 	public static void loadGames() {
 		games = new HashMap<String, TDGame>();
 		gameIn = new HashMap<String, PlayerStorage>();
 		idLink = new HashMap<String, Object>();
-		assist = new HashMap<String, HashMap<String, Integer>>();
 		File f = new File(Main.plugin.getDataFolder(), "games.yml");
 		if(!f.exists()) {
 			try {
@@ -63,22 +61,27 @@ public class TDUtils {
 				if(id.contains("Animation")) {
 					TDAnimation animation = (TDAnimation)idLinkObj;
 					animation.stop();
+					idLink.remove(id);
 				}
 				if(id.contains("GameStarter")) {
 					TDGameRunner gs = (TDGameRunner)idLinkObj;
 					gs.endGame();
+					idLink.remove(id);
 				}
 				if(id.contains("Animator")) {
 					TDAnimator animator = (TDAnimator)idLinkObj;
 					animator.stop();
+					idLink.remove(id);
 				}
 				if(id.contains("Thread")) {
 					Thread thread = (Thread)idLinkObj;
 					thread.interrupt();
+					idLink.remove(id);
 				}
 				if(id.contains("TowerBuilder")) {
 					TowerBuilder tb = (TowerBuilder)idLinkObj;
 					tb.interrupt();
+					idLink.remove(id);
 				}
 			}
 		}

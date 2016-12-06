@@ -7,19 +7,14 @@ import org.spigotmc.AsyncCatcher;
 
 import com.minersleague.main.commands.CMD_Addlore;
 import com.minersleague.main.commands.CMD_Announcement;
-import com.minersleague.main.commands.CMD_COD;
-import com.minersleague.main.commands.CMD_TDGameTabCompleter;
 import com.minersleague.main.commands.CMD_GameTowerDefense;
 import com.minersleague.main.commands.CMD_Rename;
-import com.minersleague.main.commands.CMD_Test;
+import com.minersleague.main.commands.CMD_TDGameTabCompleter;
 import com.minersleague.main.commands.MinersLeagueCommand;
 import com.minersleague.main.config.Statistics;
-import com.minersleague.main.games.codwarfare.CODEventHandler;
-import com.minersleague.main.games.generall.util.CODUtils;
 import com.minersleague.main.games.generall.util.TDUtils;
 import com.minersleague.main.games.towerdefense.mechanics.TowerDefenseEventHandler;
 import com.minersleague.main.games.towerdefense.tower.Towers;
-import com.minersleague.main.permissions.Groups;
 
 public class Main extends JavaPlugin {
 	
@@ -30,24 +25,24 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		Statistics.setup(plugin);
 		AsyncCatcher.enabled = false;
-		Groups.init();
+		//Groups.init();
 		Towers.loadTowners();
 		TDUtils.loadGames();
-		new CODUtils();
+		//new CODUtils();
 		
 		//Commands
-		registerCommand(new CMD_Test());
+		//registerCommand(new CMD_Test());
 		registerCommand(new CMD_Announcement());
 		registerCommand(new CMD_Rename());
 		registerCommand(new CMD_Addlore());
 		registerCommand(new CMD_GameTowerDefense());
 		getCommand("towerdefense").setTabCompleter(new CMD_TDGameTabCompleter());
-		registerCommand(new CMD_COD());
+		//registerCommand(new CMD_COD());
 		
 		//Listeners
 		//registerListener(new PlayerWorldChangeEvent());
 		registerListener(new TowerDefenseEventHandler());
-		registerListener(new CODEventHandler());
+		//registerListener(new CODEventHandler());
 		
 	}
 

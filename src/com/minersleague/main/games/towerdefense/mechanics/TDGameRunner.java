@@ -52,8 +52,9 @@ public class TDGameRunner extends SimpleThread {
 	}
 	
 	public void startCountdown() {
-		TDLobby tdl = new TDLobby(game);
-		do {} while(!tdl.done);
+		//TODO Lobby
+		//TDLobby tdl = new TDLobby(game);
+		//do {} while(!tdl.done);
 		for(Player p : Bukkit.getServer().getOnlinePlayers()) {
 			if(game.getPlayersPlaying().contains(p.getName())) {
 				p.teleport(game.getPlayground());
